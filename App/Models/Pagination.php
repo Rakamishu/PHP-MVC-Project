@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use App\Core\Database as Database;
-
 class Pagination 
 {
     
@@ -17,7 +15,7 @@ class Pagination
         $this->perPage = (int)$perPage;
         $this->currentPage = (int)$currentPage;
         
-        $this->db = Database::getInstance();
+        $this->db = \App\Core\Database::getInstance();
         $getTotalRows = $this->db->getRows("SELECT COUNT(*) as rows FROM $table");
 
         $getTotalRows = $getTotalRows[0]->rows;

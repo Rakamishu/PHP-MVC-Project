@@ -2,8 +2,6 @@
 
 namespace App\Models\Auth;
 
-use App\Core\Database;
-
 class UserData
 {    
     
@@ -11,7 +9,7 @@ class UserData
     
     public function __construct() 
     {
-        $this->db = Database::getInstance();
+        $this->db = \App\Core\Database::getInstance();
     }
     
     public function userData($userid)

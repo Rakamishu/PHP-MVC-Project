@@ -2,9 +2,9 @@
 
 namespace App\Models\Auth;
 
-use App\Core\Database;
-use App\Models\Auth\PasswordEncryption as PasswordEncryption;
-use App\Core\FlashMessage;
+use \App\Core\Database;
+use \App\Models\Auth\PasswordEncryption as PasswordEncryption;
+use \App\Core\FlashMessage;
 use \DateTime;
 
 class Login
@@ -110,10 +110,7 @@ class Login
         $_SESSION['HTTP_USER_AGENT'] = $userAgent;
         $_SESSION['type']            = $query[0]->type;
 
-        if($redirect)
-        {
-            redirect($redirect);
-        }
+        redirect($redirect);
     }
     
     /**

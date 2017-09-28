@@ -1,6 +1,6 @@
 <?php
 
-use App\Core\Controller;
+use \App\Core\Controller;
 
 class Page extends Controller
 {

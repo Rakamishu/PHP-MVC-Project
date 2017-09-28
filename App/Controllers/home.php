@@ -1,6 +1,6 @@
 <?php
 
-use App\Core\Controller as Controller;
+use \App\Core\Controller as Controller;
 
 class Home extends Controller
 {    

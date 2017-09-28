@@ -1,7 +1,8 @@
 <?php
 
-use App\Core\Controller as Controller;
-use App\Models\Auth\Authenticate as Authenticate;
+use \App\Core\Controller as Controller;
+use \App\Models\Auth\Authenticate as Authenticate;
+use \App\Core\FlashMessage as FlashMessage;
 
 class Admin extends Controller
 {    
@@ -13,10 +14,7 @@ class Admin extends Controller
         {
             $this->user_type = $_SESSION['type'];
         }
-    }
-    
-    public function index()
-    {
+        
         /**
          * Authenticate if the user is logged in and has Admin Privileges
          */
@@ -25,7 +23,10 @@ class Admin extends Controller
         {
             redirect(SITE_ADDR.'/public/home');
         }
-        
+    }
+    
+    public function index()
+    {
         $news = $this->model('Admin\Dashboard'); 
         $data['totalUsers'] = $news->totalUsers();
         $data['totalNews'] = $news->totalNews();
@@ -37,15 +38,7 @@ class Admin extends Controller
     }
     
     public function news($action, $id = null)
-    {
-        /**
-         * $action is required. We either add news or edit existing ones.
-         */
-        if(empty($action))
-        {
-            error_404();
-        }
-        
+    {        
         /**
          * Separating the different actions.
          */
@@ -104,7 +97,7 @@ class Admin extends Controller
              */
             if(!$data['news'])
             {
-                App\Core\FlashMessage::error("News with this ID does not exist.");
+                FlashMessage::error("News with this ID does not exist.");
                 error_404();
             }
 

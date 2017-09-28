@@ -2,7 +2,6 @@
 
 namespace App\Models\Auth;
 
-use \App\Models\Auth\PasswordEncryption as PasswordEncryption;
 use \App\Core\FlashMessage;
 use \App\Core\Mail as Mail;
 
@@ -52,7 +51,7 @@ class PasswordRecovery
         $secret_key = md5(substr($random_string, 0, 32));
         $new_password_readable = substr($random_string, 0, 10);
         
-        $passwordEncryption = new PasswordEncryption();
+        $passwordEncryption = new \App\Models\Auth\PasswordEncryption();
         $new_password = $passwordEncryption->encrypt($new_password_readable);
         
         $this->db->insertRow("INSERT INTO forgotten_passwords 

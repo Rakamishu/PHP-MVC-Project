@@ -2,10 +2,8 @@
 
 namespace App\Models\Auth;
 
-use App\Models\Auth\Login as Login;
-use App\Models\Auth\PasswordEncryption as PasswordEncryption;
-use App\Core\FlashMessage;
-use App\Core\Mail as Mail;
+use \App\Core\FlashMessage;
+use \App\Core\Mail as Mail;
 use \DateTime;
 
 class Register
@@ -55,7 +53,7 @@ class Register
             redirect(SITE_ADDR.'/public/user/signup');
         }
         
-        $passwordEncryption = new PasswordEncryption();
+        $passwordEncryption = new \App\Models\Auth\PasswordEncryption();
         $passwordHash = $passwordEncryption->encrypt($password);
         
         $this->db->insertRow("INSERT INTO users 
@@ -75,7 +73,7 @@ class Register
                 . "You can now use your account to create your personal calendar with your favorite TV Series! <br /><br /> "
                 . "The ".$GLOBALS['site_name']." team"
                 );
-        $login = new Login();
+        $login = new \App\Models\Auth\Login();
         $login->login($username, $password, false, \App\Core\CSRF::generate(), md5($_SERVER['HTTP_USER_AGENT']), "http://localhost/MVC/public/");
     }
       

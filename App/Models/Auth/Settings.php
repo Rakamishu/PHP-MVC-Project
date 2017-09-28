@@ -2,10 +2,9 @@
 
 namespace App\Models\Auth;
 
-use App\Models\Auth\UserData as Userdata;
-use App\Models\Auth\PasswordEncryption as PasswordEncryption;
-use App\Core\Database;
-use App\Core\FlashMessage;
+use \App\Models\Auth\UserData as Userdata;
+use \App\Models\Auth\PasswordEncryption as PasswordEncryption;
+use \App\Core\FlashMessage;
 use \DateTime;
 
 class Settings extends Userdata
@@ -15,7 +14,7 @@ class Settings extends Userdata
     
     public function __construct()
     {
-        $this->db = Database::getInstance();
+        $this->db = \App\Core\Database::getInstance();
     }
     
     public function editEmail($email, $email_repeat, $password, $userid)

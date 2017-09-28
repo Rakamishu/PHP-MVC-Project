@@ -1,7 +1,7 @@
 <?php
 
-use App\Core\Controller as Controller;
-use App\Models\Pagination as Pagination;
+use \App\Core\Controller as Controller;
+use \App\Models\Pagination as Pagination;
 
 class News extends Controller
 {

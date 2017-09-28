@@ -114,12 +114,12 @@ class User extends Controller
          * If secret key is empty, show the form for requesting a password change.
          */
         if(isset($_POST['recover']))
-        {    
+        {
             $users = $this->model('Auth\PasswordRecovery');
             $recovery = $users->passwordRecovery($_POST['email'], $_SERVER['REMOTE_ADDR'], $_POST['csrf']);
         }
         else
-        {   
+        {
             $this->view('header', ['title' => 'Password Recovery']);
             $this->view('menu');
             $this->view('users/recovery', ['csrf' => \App\Core\CSRF::generate()]);
@@ -181,7 +181,7 @@ class User extends Controller
     private function change_email()
     {
         if(isset($_POST['update']))
-        {    
+        {
             $users = $this->model('Auth\Settings');
             $update = $users->editEmail($_POST['email'], $_POST['email_repeat'], $_POST['password'], $_SESSION['userid'], $_POST['csrf']);
         }

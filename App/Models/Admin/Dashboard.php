@@ -2,15 +2,13 @@
 
 namespace App\Models\Admin;
 
-use App\Core\Database as Database;
-
 class Dashboard
 {
     protected $db;
     
     public function __construct() 
     {
-        $this->db = Database::getInstance();
+        $this->db = \App\Core\Database::getInstance();
     }
     
     public function totalUsers()

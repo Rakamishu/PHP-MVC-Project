@@ -2,7 +2,6 @@
 
 namespace App\Models\News;
 
-use App\Core\Database as Database;
 use App\Models\Pagination as Pagination;
 use App\Core\FlashMessage as FlashMessage;
 
@@ -13,7 +12,7 @@ class News
     
     public function __construct() 
     {
-        $this->db = Database::getInstance();
+        $this->db = \App\Core\Database::getInstance();
     }
     
     /**
