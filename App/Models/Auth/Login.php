@@ -2,8 +2,9 @@
 
 namespace App\Models\Auth;
 
-use \App\Core\Database;
-use \App\Core\FlashMessage;
+use App\Core\Database;
+use App\Models\Auth\PasswordEncryption as PasswordEncryption;
+use App\Core\FlashMessage;
 use \DateTime;
 
 class Login
@@ -54,7 +55,8 @@ class Login
         /**
          * Compare if the password from the field matches with the password from the database.
          */
-        if(md5($password) != $query[0]->password)
+        $passwordEncryption = new PasswordEncryption();
+        if($passwordEncryption->check($password, $query[0]->password) === false)
         {
             $err[] = 'Incorrect password.';
         }

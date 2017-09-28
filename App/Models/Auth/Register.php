@@ -3,7 +3,7 @@
 namespace App\Models\Auth;
 
 use App\Models\Auth\Login as Login;
-use App\Core\Database;
+use App\Models\Auth\PasswordEncryption as PasswordEncryption;
 use App\Core\FlashMessage;
 use App\Core\Mail as Mail;
 use \DateTime;
@@ -15,11 +15,10 @@ class Register
     
     public function __construct() 
     {
-        $this->db = Database::getInstance();
+        $this->db = \App\Core\Database::getInstance();
     }
 
     public function register($username, $email, $password, $csrf){
-        $passwordHash = self::passwordHash($password);
         
         if(empty($username))
         {
@@ -56,6 +55,9 @@ class Register
             redirect(SITE_ADDR.'/public/user/signup');
         }
         
+        $passwordEncryption = new PasswordEncryption();
+        $passwordHash = $passwordEncryption->encrypt($password);
+        
         $this->db->insertRow("INSERT INTO users 
             (username, email, password) 
             VALUES 
@@ -76,18 +78,5 @@ class Register
         $login = new Login();
         $login->login($username, $password, false, \App\Core\CSRF::generate(), md5($_SERVER['HTTP_USER_AGENT']), "http://localhost/MVC/public/");
     }
-    
-    
-    /**
-     * Hash the password entered by the user. 
-     * @param string $password - entered by the user password
-     * @return string the hashed password
-     */
-    public function passwordHash($password){
-        if(!empty($password)){
-            $password = md5($password);
-            return $password;
-        }
-    }
-    
+      
 }

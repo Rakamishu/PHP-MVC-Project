@@ -1,7 +1,7 @@
 <?php
 
-use App\Core\Controller as Controller;
-use App\Models\Auth\Authenticate as Authenticate;
+use \App\Core\Controller as Controller;
+use \App\Models\Auth\Authenticate as Authenticate;
 
 class User extends Controller
 {
@@ -38,7 +38,7 @@ class User extends Controller
         {
             $this->view('header', ['title' => 'Login']);
             $this->view('menu');
-            $this->view('users/login', ['csrf' => App\Core\CSRF::generate()]);
+            $this->view('users/login', ['csrf' => \App\Core\CSRF::generate()]);
             $this->view('footer');
         }
     }
@@ -65,7 +65,7 @@ class User extends Controller
             
             $this->view('header', ['title' => 'Register']);
             $this->view('menu');
-            $this->view('users/signup', ['recaptcha' => $recaptcha, 'csrf' => App\Core\CSRF::generate()]);
+            $this->view('users/signup', ['recaptcha' => $recaptcha, 'csrf' => \App\Core\CSRF::generate()]);
             $this->view('footer');
         }
     }
@@ -122,7 +122,7 @@ class User extends Controller
         {   
             $this->view('header', ['title' => 'Password Recovery']);
             $this->view('menu');
-            $this->view('users/recovery', ['csrf' => App\Core\CSRF::generate()]);
+            $this->view('users/recovery', ['csrf' => \App\Core\CSRF::generate()]);
             $this->view('footer');
         }
     }
@@ -183,13 +183,13 @@ class User extends Controller
         if(isset($_POST['update']))
         {    
             $users = $this->model('Auth\Settings');
-            $update = $users->editEmail($_POST['email'], $_POST['email_repeat'], $_POST['password'], $_SESSION['userid']);
+            $update = $users->editEmail($_POST['email'], $_POST['email_repeat'], $_POST['password'], $_SESSION['userid'], $_POST['csrf']);
         }
         else
         {   
             $this->view('header', ['title' => 'Update Email']);
             $this->view('menu');
-            $this->view('users/edit_email', ['csrf' => App\Core\CSRF::generate()]);
+            $this->view('users/edit_email', ['csrf' => \App\Core\CSRF::generate()]);
             $this->view('footer');
         }
     }
@@ -199,13 +199,13 @@ class User extends Controller
         if(isset($_POST['update']))
         {    
             $users = $this->model('Auth\Settings');
-            $update = $users->editPassword($_POST['password'], $_POST['newpassword'], $_POST['newpassword_repeat']);
+            $update = $users->editPassword($_SESSION['userid'], $_POST['password'], $_POST['newpassword'], $_POST['newpassword_repeat'], $_POST['csrf']);
         }
         else
         {   
             $this->view('header', ['title' => 'Update Password']);
             $this->view('menu');
-            $this->view('users/edit_password', ['csrf' => App\Core\CSRF::generate()]);
+            $this->view('users/edit_password', ['csrf' => \App\Core\CSRF::generate()]);
             $this->view('footer');
         } 
     }

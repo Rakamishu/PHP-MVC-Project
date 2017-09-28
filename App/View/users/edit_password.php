@@ -10,7 +10,7 @@
     </div>
     <div class="form-group">
         <label>New password</label>
-        <input type="text" name="newpassword_repeat" class="form-control" placeholder="">
+        <input type="password" name="newpassword" class="form-control" placeholder="">
     </div>
     <div class="form-group">
         <label>Repeat New password</label>

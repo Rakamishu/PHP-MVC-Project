@@ -2,19 +2,18 @@
 
 namespace App\Models\Auth;
 
-use App\Models\Auth\Register;
-use App\Core\Database;
-use App\Core\FlashMessage;
-use App\Core\Mail as Mail;
+use \App\Models\Auth\PasswordEncryption as PasswordEncryption;
+use \App\Core\FlashMessage;
+use \App\Core\Mail as Mail;
 
-class PasswordRecovery extends Register
+class PasswordRecovery
 {    
     
     protected $db;
     
     public function __construct() 
     {
-        $this->db = Database::getInstance();
+        $this->db = \App\Core\Database::getInstance();
     }
     
     public function passwordRecovery($email, $ip, $csrf)
@@ -49,9 +48,12 @@ class PasswordRecovery extends Register
          * Generate new password that is readable.
          * Hash the generated password.
          */
-        $secret_key = md5(substr(str_shuffle("1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm!@#$%^&*(-=."), 0, 32));
-        $new_password_readable = substr(str_shuffle("1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm!@#$%^&*(-=."), 0, 10);
-        $new_password = parent::passwordHash($new_password_readable);
+        $random_string = str_shuffle("1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm!@#$%^&*(-=.");
+        $secret_key = md5(substr($random_string, 0, 32));
+        $new_password_readable = substr($random_string, 0, 10);
+        
+        $passwordEncryption = new PasswordEncryption();
+        $new_password = $passwordEncryption->encrypt($new_password_readable);
         
         $this->db->insertRow("INSERT INTO forgotten_passwords 
             (email, secret_key, new_password, ip) 
