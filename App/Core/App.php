@@ -2,7 +2,7 @@
 
 namespace App\Core;
 
-use App\Models\Auth\Login as Login;
+use \App\Models\Auth\Login as Login;
 
 class App
 {
