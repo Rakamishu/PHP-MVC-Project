@@ -32,7 +32,8 @@ class User extends Controller
         if(isset($_POST['login']))
         {
             $users = $this->model('Auth\Login');
-            $login = $users->login($_POST['username'], $_POST['password'], @$_POST['remember_me'], $_POST['csrf'], md5($_SERVER['HTTP_USER_AGENT']), SITE_ADDR.'/public/user/login'); 
+            $remember_me = isset($_POST['remember_me']) === true ? true : false;
+            $login = $users->login($_POST['username'], $_POST['password'], $remember_me, $_POST['csrf'], md5($_SERVER['HTTP_USER_AGENT']), SITE_ADDR.'/public/user/login'); 
         }
         else
         {
@@ -90,7 +91,7 @@ class User extends Controller
         }
     }
     
-    public function recovery($secret_key = null)
+    public function recovery(string $secret_key = null)
     {
         /**
          * Check if the user is logged in
@@ -128,13 +129,8 @@ class User extends Controller
     }
     
     
-    public function profile($userid = null)
-    {
-        if($userid == null)
-        {
-            error_404();
-        }
-        
+    public function profile(int $userid = null)
+    {        
         $users = $this->model('Auth\UserData');
         $data = $users->userData($userid);
         
@@ -151,7 +147,7 @@ class User extends Controller
         }
     }
     
-    public function settings($settings)
+    public function settings(string $settings)
     {
         /**
          * Check if the user is logged in

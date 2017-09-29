@@ -11,7 +11,7 @@ class CSRF
         return $_SESSION['csrf'] = $token;
     }
     
-    public static function check($token)
+    public static function check(string $token)
     {
         if(hash_equals($_SESSION['csrf'], $token))
         {

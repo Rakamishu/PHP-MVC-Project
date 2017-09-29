@@ -17,7 +17,7 @@ class Settings extends Userdata
         $this->db = \App\Core\Database::getInstance();
     }
     
-    public function editEmail($email, $email_repeat, $password, $userid)
+    public function editEmail(string $email, string $email_repeat, string $password, int $userid)
     {        
         /**
          * Check if the new email is valid
@@ -69,7 +69,7 @@ class Settings extends Userdata
         redirect(SITE_ADDR.'/public/user/settings/email');
     }
     
-    public function editPassword($userid, $password, $newpassword, $newpassword_repeat, $csrf)
+    public function editPassword(int $userid, string $password, string $newpassword, string $newpassword_repeat, string $csrf)
     {
         if($csrf != \App\Core\CSRF::check($csrf))
         {

@@ -10,10 +10,10 @@ class Pagination
     private $currentPage;
     private $total;
     
-    public function __construct($table, $currentPage = 1, $perPage)
+    public function __construct(string $table, int $currentPage = 1, int $perPage)
     {
-        $this->perPage = (int)$perPage;
-        $this->currentPage = (int)$currentPage;
+        $this->perPage = $perPage;
+        $this->currentPage = $currentPage;
         
         $this->db = \App\Core\Database::getInstance();
         $getTotalRows = $this->db->getRows("SELECT COUNT(*) as rows FROM $table");
@@ -22,7 +22,7 @@ class Pagination
         $this->total = ceil($getTotalRows/$this->perPage);
     }
     
-    public function createLinks($url) 
+    public function createLinks(string $url) 
     {
         $adjacents = 2;
         $next_page = $this->currentPage + 1;

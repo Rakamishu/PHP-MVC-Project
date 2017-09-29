@@ -1,2 +1,2 @@
 
-<?= $data->content; ?>
+<?= $data['news']->content; ?>

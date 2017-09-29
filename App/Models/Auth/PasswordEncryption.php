@@ -5,7 +5,7 @@ namespace App\Models\Auth;
 class PasswordEncryption 
 {
     
-    public function encrypt($password)
+    public function encrypt(string $password)
     {
         if(!empty($password))
         {
@@ -15,7 +15,7 @@ class PasswordEncryption
     }
     
     
-    public function check($clean, $encrypted)
+    public function check(string $clean, string $encrypted)
     {
         if(md5($clean) == $encrypted)
         {

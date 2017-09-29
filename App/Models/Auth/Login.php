@@ -25,7 +25,7 @@ class Login
      * @param String $userAgent - returns md5($_SERVER['HTTP_USER_AGENT'])
      * @param String|Null $redirect - URL to redirect to when login is successful. 
      */
-    public function login($username, $password, $rememberMe = false, $csrf, $userAgent, $redirect)
+    public function login(string $username, string $password, bool $rememberMe, string $csrf, string $userAgent, string $redirect)
     {
         /**
          * Check against cross-site forgery
@@ -118,7 +118,7 @@ class Login
      * @param string $cookie - user's login cookie
      * @param string $session - user's login session
      */
-    public function cookieLogin($cookie){
+    public function cookieLogin(string $cookie){
         if(!empty($cookie) && empty($_SESSION['username'])){
             $query = $this->db->getRows("SELECT userid, username, type FROM users WHERE userid = ?", [self::getCookieHashUserId()]);
             

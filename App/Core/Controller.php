@@ -5,13 +5,13 @@ namespace App\Core;
 class Controller
 {
     
-    public function model($model)
+    public function model(string $model)
     {
         $class = "\App\Models\\$model";
         return new $class();
     }
     
-    public function view($view, $data = [])
+    public function view(string $view, array $data = [])
     {
         if(file_exists('../App/View/'.$view.'.php'))
         {

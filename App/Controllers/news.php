@@ -32,18 +32,18 @@ class News extends Controller
         $this->view('footer');
     }
     
-    public function read($newsid = null) //$newsid is automatically added as a parameter
+    public function read(int $newsid = null) //$newsid is automatically added as a parameter
     {
         if($newsid == null){
             error_404();
         }
         
         $news = $this->model('News\News');
-        $data = $news->viewNews($newsid);
+        $data['news'] = $news->viewNews($newsid);
         
         if($data)
         {
-            $this->view('header', ['title' => $data->title]);
+            $this->view('header', ['title' => $data['news']->title]);
             $this->view('menu');
             $this->view('news/view', $data);
             $this->view('footer');

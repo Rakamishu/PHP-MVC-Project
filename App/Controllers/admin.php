@@ -37,8 +37,8 @@ class Admin extends Controller
         $this->view('footer');
     }
     
-    public function news($action, $id = null)
-    {        
+    public function news(string $action, int $id = null)
+    {
         /**
          * Separating the different actions.
          */
@@ -74,7 +74,7 @@ class Admin extends Controller
         }
     }
     
-    private function edit_news($id)
+    private function edit_news(int $id)
     {
         if(empty($id))
         {

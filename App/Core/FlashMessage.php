@@ -3,16 +3,16 @@
 namespace App\Core;
 
 class FlashMessage {
-    public static function warning($text = null) {
+    public static function warning(string $text = null) {
         $_SESSION['flash_message'] = '<div class="alert alert-warning toast">'.$text.'</div>';
     }
-    public static function success($text = null) {
+    public static function success(string $text = null) {
         $_SESSION['flash_message'] = '<div class="alert alert-success toast">'.$text.'</div>';
     }
-    public static function info($text = null) {
+    public static function info(string $text = null) {
         $_SESSION['flash_message'] = '<div class="alert alert-info toast">'.$text.'</div>';
     }
-    public static function error($text = null) {
+    public static function error(string $text = null) {
         $_SESSION['flash_message'] = '<div class="alert alert-danger toast">'.$text.'</div>';
     }
 

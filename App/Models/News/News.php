@@ -21,7 +21,7 @@ class News
      * @param int $perPage  
      * @return type
      */
-    public function allNews($currentPage, $perPage)
+    public function allNews(int $currentPage, int $perPage)
     {
         $startFrom = ($currentPage*$perPage) - $perPage;
         
@@ -35,7 +35,7 @@ class News
      * @param int $newsid - ID of the news
      * @return array
      */
-    public function viewNews($newsid)
+    public function viewNews(int $newsid)
     {        
         $getRow = $this->db->getRow("SELECT * FROM news WHERE id = ?", [$newsid]);
         
@@ -47,7 +47,7 @@ class News
      * @param string $title Title of the news
      * @param string $content Content of the news
      */
-    public function add($title, $content, $csrf)
+    public function add(string $title, string $content, string $csrf)
     {
         /**
         * Check against cross-site forgery
@@ -89,7 +89,7 @@ class News
      * @param string $content New content of the news
      * @param int $id The ID of the news that is being edited
      */
-    public function edit($title, $content, $id, $csrf)
+    public function edit(string $title, string $content, int $id, string $csrf)
     {
         if(empty($title) || empty($content))
         {

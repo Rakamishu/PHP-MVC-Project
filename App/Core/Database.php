@@ -33,7 +33,7 @@ class Database
         return self::$instance;
     }
     
-    public function getRow($query, $params = [])
+    public function getRow(string $query, array $params = [])
     {
         try {
             $stmt = $this->conn->prepare($query);
@@ -44,7 +44,7 @@ class Database
         }
     }
     
-    public function getRows($query, $params = [])
+    public function getRows(string $query, array $params = [])
     {
         try {
             $stmt = $this->conn->prepare($query);
@@ -55,7 +55,7 @@ class Database
         }
     }
     
-    public function insertRow($query, $params = [])
+    public function insertRow(string $query, array $params = [])
     {
         try {
             $stmt = $this->conn->prepare($query);
@@ -66,12 +66,12 @@ class Database
         }
     }
     
-    public function updateRow($query, $params = [])
+    public function updateRow(string $query, array $params = [])
     {
         return $this->insertRow($query, $params);
     }
     
-    public function deleteRow($query, $params = [])
+    public function deleteRow(string $query, array $params = [])
     {
         return $this->insertRow($query, $params);
     }

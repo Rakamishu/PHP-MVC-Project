@@ -9,7 +9,7 @@ class Page extends Controller
      * Open file from view/pages/ folder.
      * @param String
      */
-    public function index($page)
+    public function index(string $page = "404")
     {
         if(!file_exists(ROOT.'/view/pages/'.$page.'.php'))
         {

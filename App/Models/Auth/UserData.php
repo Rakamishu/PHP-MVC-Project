@@ -12,7 +12,7 @@ class UserData
         $this->db = \App\Core\Database::getInstance();
     }
     
-    public function userData($userid)
+    public function userData(int $userid)
     {
         $query = $this->db->getRows("SELECT * FROM users WHERE userid = ?", [$userid]);
         

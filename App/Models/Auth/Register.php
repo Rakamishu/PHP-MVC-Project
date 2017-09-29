@@ -16,7 +16,7 @@ class Register
         $this->db = \App\Core\Database::getInstance();
     }
 
-    public function register($username, $email, $password, $csrf)
+    public function register(string $username, string $email, string $password, string $csrf)
     {
         if($csrf != \App\Core\CSRF::check($csrf))
         {

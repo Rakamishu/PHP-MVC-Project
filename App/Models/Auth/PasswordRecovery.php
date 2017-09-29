@@ -15,7 +15,7 @@ class PasswordRecovery
         $this->db = \App\Core\Database::getInstance();
     }
     
-    public function passwordRecovery($email, $ip, $csrf)
+    public function passwordRecovery(string $email, string $ip, string $csrf)
     {
         if($csrf != \App\Core\CSRF::check($csrf))
         {
@@ -81,7 +81,7 @@ class PasswordRecovery
     }
     
     
-    public function activate($secret_key){
+    public function activate(string $secret_key){
         $validate_secret = $this->db->getRow("SELECT * FROM forgotten_passwords WHERE secret_key = ?", [$secret_key]);
         
         if($validate_secret != false && strtotime($validate_secret->date_generated)+60*60*24 > time() && $validate_secret->activated < 1)
