@@ -16,23 +16,61 @@ class Register
         $this->db = \App\Core\Database::getInstance();
     }
 
-    public function register($username, $email, $password, $csrf){
-        
-        if(empty($username))
+    public function register($username, $email, $password, $csrf)
+    {
+        if($csrf != \App\Core\CSRF::check($csrf))
         {
-            $err[] = 'Please enter username';                
+            $err[] = 'CSRF error.';
         }
+        
+        /**
+         * Check for empty fields
+         */
+        if(empty($username) || empty($password))
+        {
+            $err[] = 'All fields are required.';                
+        }
+        
+        /**
+         * Validate email
+         */
         if(!$email = filter_var($email, FILTER_SANITIZE_EMAIL))
         {
             $err[] = 'Invalid E-mail address.';
         }
-        if(empty($password))
+        
+        /**
+         * Check if the email is not taken by another user
+         */
+        $email_unique = $this->db->getRow("SELECT COUNT(*) as count FROM users WHERE email = ?", [$email]);
+        if($email_unique->count > 0)
         {
-            $err[] = 'Please enter password.';                
+            $err[] = 'This email is already being used by another user';
         }
-        if($csrf != \App\Core\CSRF::check($csrf))
+        
+        /**
+         * Check if the password is too short.
+         */
+        if(strlen($password) <= 5)
         {
-            $err[] = 'CSRF error.';
+            $err[] = 'The password is too short.';
+        }
+        
+        /**
+         * Check if the email is not taken by another user
+         */
+        $username_unique = $this->db->getRow("SELECT COUNT(*) as count FROM users WHERE username = ?", [$username]);
+        if($username_unique->count > 0)
+        {
+            $err[] = 'This username is already being used by another user.';
+        }
+        
+        /**
+         * Validate username
+         */
+        if(preg_match("/[A-Za-z0-9-_]/", $username) == false)
+        {
+            $err[] = "Invalid characters for username. Allowed characters: letters, numbers, dash and underscore.";
         }
         
         /**
