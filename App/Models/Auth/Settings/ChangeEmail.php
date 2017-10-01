@@ -2,11 +2,10 @@
 
 namespace App\Models\Auth\Settings;
 
-use \App\Models\Auth\UserData as Userdata;
 use \App\Models\Auth\PasswordEncryption as PasswordEncryption;
 use \App\Core\FlashMessage;
 
-class ChangeEmail extends Userdata
+class ChangeEmail
 {    
     
     protected $db;
@@ -61,7 +60,8 @@ class ChangeEmail extends Userdata
         
         /* Validate the password */
         $passwordEncryption = new PasswordEncryption();
-        if($passwordEncryption->check($this->password, $this->userData($this->userid)[0]->password) === false)
+        $get_current_pass = $this->db->getRows("SELECT * FROM users WHERE userid = ?", [$this->userid]);
+        if($passwordEncryption->check($this->password, $get_current_pass[0]->password) === false)
         {
             $err[] = 'Invalid password';
         }

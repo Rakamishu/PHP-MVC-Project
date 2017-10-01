@@ -6,17 +6,19 @@ class Pagination
 {
     
     protected $db;    
-    private $perPage;
     private $currentPage;
+    private $perPage;
     private $total;
+    private $table;
     
     public function __construct(string $table, int $currentPage = 1, int $perPage)
     {
-        $this->perPage = $perPage;
         $this->currentPage = $currentPage;
+        $this->perPage = $perPage;
+        $this->table = $table;
         
         $this->db = \App\Core\Database::getInstance();
-        $getTotalRows = $this->db->getRows("SELECT COUNT(*) as rows FROM $table");
+        $getTotalRows = $this->db->getRows("SELECT COUNT(*) as rows FROM $this->table");
 
         $getTotalRows = $getTotalRows[0]->rows;
         $this->total = ceil($getTotalRows/$this->perPage);

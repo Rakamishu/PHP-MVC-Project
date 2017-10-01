@@ -2,20 +2,19 @@
 
 namespace App\Models\Auth\Settings;
 
-use \App\Models\Auth\UserData as Userdata;
 use \App\Models\Auth\PasswordEncryption as PasswordEncryption;
 use \App\Core\FlashMessage;
 
-class ChangePassword extends Userdata
+class ChangePassword
 {    
     
     protected $db;
-    private $password;
     private $userid;
-    private $csrf;
+    private $password;
     private $newpassword;
     private $newpassword_hashed;
     private $newpassword_repeat;
+    private $csrf;
     
     public function __construct()
     {

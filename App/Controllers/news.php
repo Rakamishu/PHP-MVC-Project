@@ -10,18 +10,14 @@ class News extends Controller
     {
         $news = $this->model('News\News');
         
-        /**
-         * Get the current page. Set it to 1 by default if page is not set.
-         */
+        /* Get the current page */
         $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
         if($currentPage < 1)
         {
             $currentPage = 1;
         }
         
-        /**
-         * Send the news from the current page and pagination as an array to the view.
-         */
+        /* Send the news from the current page and pagination as an array to the view. */
         $data['news'] = $news->allNews($currentPage, 10);
         $pagination = new Pagination('news', $currentPage, 10);
         $data['pagination'] = $pagination->createLinks(SITE_ADDR.'/public/news?page=');
