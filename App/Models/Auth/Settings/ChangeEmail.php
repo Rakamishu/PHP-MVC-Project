@@ -73,11 +73,7 @@ class ChangeEmail extends Userdata
             $err[] = 'This email is already being used by another user';
         }
         
-        if(empty($err))
-        {
-            return false;
-        }
-        return $err;
+        return empty($err) ? false : $err;
     }
     
     public function updateEmail()

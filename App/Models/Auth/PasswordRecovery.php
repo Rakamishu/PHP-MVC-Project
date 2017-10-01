@@ -70,12 +70,7 @@ class PasswordRecovery
             $err[] = "This email is not used by anyone.";
         }
         
-        /* Return the array with errors or return false if non have been registered. */
-        if(empty($err))
-        {
-            return false;
-        }
-        return $err;
+        return empty($err) ? false : $err;
     }
     
     private function generatePass()

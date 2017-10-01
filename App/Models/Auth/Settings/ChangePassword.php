@@ -78,12 +78,7 @@ class ChangePassword extends Userdata
             $err[] = 'Wrong current password.';
         }
         
-        /* Return the array with errors or return false if non have been registered. */
-        if(empty($err))
-        {
-            return false;
-        }
-        return $err;
+        return empty($err) ? false : $err;
     }
     
     
