@@ -49,16 +49,16 @@ class Admin extends Controller
                 break;
                 
             case "add":
-                $this->add_news();
+                $this->addNews();
                 break;
             
             case "edit":
-                $this->edit_news($id);
+                $this->editNews($id);
                 break;
         }
     }
     
-    private function add_news()
+    private function addNews()
     {
         if(isset($_POST['add']))
         {
@@ -74,7 +74,7 @@ class Admin extends Controller
         }
     }
     
-    private function edit_news(int $id)
+    private function editNews(int $id)
     {
         if(empty($id))
         {

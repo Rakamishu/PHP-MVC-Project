@@ -9,6 +9,10 @@ class PasswordRecovery
 {    
     
     protected $db;
+    private $email;
+    private $ip;
+    private $csrf;
+    private $user_data_from_db;
     
     public function __construct() 
     {
@@ -17,62 +21,30 @@ class PasswordRecovery
     
     public function passwordRecovery(string $email, string $ip, string $csrf)
     {
-        if($csrf != \App\Core\CSRF::check($csrf))
-        {
-            $err[] = '';
-        }
+        $this->email = $email;
+        $this->ip = $ip;
+        $this->csrf = $csrf;
+        /* Get the username from the database */
+        $this->user_data_from_db = $this->db->getRow("SELECT username FROM users WHERE email = ?", [$this->email]);
         
-        if(empty($email))
+        /* Validate the user input */
+        if($this->recoveryInputValidate())
         {
-            $err[] = "Please enter a valid E-mail address.";
-        }
-        
-        $userinfo = $this->db->getRow("SELECT username FROM users WHERE email = ?", [$email]);
-        if($userinfo == false)
-        {
-            $err[] = "This email is not used by anyone.";
-        }
-        
-        /**
-         * Check if any errors have been registered so far, otherwise proceed to sending a new password
-         */
-        if($err)
-        {
-            FlashMessage::error(implode('<br />', $err));
+            FlashMessage::error(implode('<br />', $this->recoveryInputValidate()));
             redirect(SITE_ADDR.'/public/user/recovery');
         }
         
-        /**
-         * Generate new secret key for activation.
-         * Generate new password that is readable.
-         * Hash the generated password.
-         */
-        $random_string = str_shuffle("1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm!@#$%^&*(-=.");
-        $secret_key = md5(substr($random_string, 0, 32));
-        $new_password_readable = substr($random_string, 0, 10);
-        
+        /* Generate new password and return it both non-hashed and hashed. */
+        $generatePass = $this->generatePass();
         $passwordEncryption = new \App\Models\Auth\PasswordEncryption();
-        $new_password = $passwordEncryption->encrypt($new_password_readable);
+        $new_password = $passwordEncryption->encrypt($generatePass['new_password_readable']);
         
         $this->db->insertRow("INSERT INTO forgotten_passwords 
             (email, secret_key, new_password, ip) 
             VALUES 
-            (?, ?, ?, ?)", [$email, $secret_key, $new_password, $ip]);
+            (?, ?, ?, ?)", [$this->email, $generatePass['secret_key'], $new_password, $this->ip]);
         
-        $mail = new Mail();
-        $sendMail = $mail->send(
-                $email, //Receiver
-                "New Password requested", // Subject
-                "Hello, ".$userinfo->username."<br>"
-                . "We are sending you a new password for your account in ".SITE_ADDR."<br>"
-                . "If it wasn't you who requested a new password, ignore the rest of this E-mail.<br><br>"
-                . "We generated a new password for you: <b>".$new_password_readable."</b><br>"
-                . "To activate it, click <a href='".SITE_ADDR."/public/user/recovery/".$secret_key."'>here</a><br>"
-                . "The activation link will be active for the next 24 hours.<br>"
-                . "Don't forget to change your password with a better, more secure one, as soon as possible.<br>"
-                . "The request came from IP: ".$ip
-                );
-        
+        $sendMail = $this->sendMail($generatePass['secret_key'], $generatePass['new_password_readable']);
         if($sendMail)
         {
             FlashMessage::info("Check your email.");
@@ -80,11 +52,66 @@ class PasswordRecovery
         }
     }
     
-    
-    public function activate(string $secret_key){
-        $validate_secret = $this->db->getRow("SELECT * FROM forgotten_passwords WHERE secret_key = ?", [$secret_key]);
+    private function recoveryInputValidate()
+    {
+        if(\App\Core\CSRF::check($this->csrf) === false)
+        {
+            $err[] = '';
+        }
         
-        if($validate_secret != false && strtotime($validate_secret->date_generated)+60*60*24 > time() && $validate_secret->activated < 1)
+        if(empty($this->email))
+        {
+            $err[] = "Please enter a valid E-mail address.";
+        }
+        
+        
+        if($this->user_data_from_db == false)
+        {
+            $err[] = "This email is not used by anyone.";
+        }
+        
+        /* Return the array with errors or return false if non have been registered. */
+        if(empty($err))
+        {
+            return false;
+        }
+        return $err;
+    }
+    
+    private function generatePass()
+    {
+        $random_string = str_shuffle("1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm!@#$%^&*(-=.");
+        $secret_key = md5(substr($random_string, 0, 32));
+        $new_password_readable = substr($random_string, 0, 10);
+        return ['secret_key' => $secret_key, 'new_password_readable' => $new_password_readable];
+    }
+    
+    private function sendMail(string $secret_key, string $new_password_readable)
+    {
+        $mail = new Mail();
+        $mail->send(
+                $this->email, //Receiver
+                "New Password requested", // Subject
+                "Hello, ".$this->user_data_from_db->username."<br>"
+                . "We are sending you a new password for your account in ".SITE_ADDR."<br>"
+                . "If it wasn't you who requested a new password, ignore the rest of this E-mail.<br><br>"
+                . "We generated a new password for you: <b>".$new_password_readable."</b><br>"
+                . "To activate it, click <a href='".SITE_ADDR."/public/user/recovery/".$secret_key."'>here</a><br>"
+                . "The activation link will be active for the next 24 hours.<br>"
+                . "Don't forget to change your password with a better, more secure one, as soon as possible.<br>"
+                . "The request came from IP: ".$this->ip
+                );
+        return true;
+    }
+    
+    /**
+     * Update user's password with the previously generated one 
+     * @param string $secret_key 
+     */
+    public function activatePass(string $secret_key)
+    {
+        $validateSecretKey = $this->validateSecretKey($secret_key);
+        if($validateSecretKey)
         {
             try {
                 $this->db->updateRow("
@@ -93,7 +120,7 @@ class PasswordRecovery
                             WHERE email = ?;
                         UPDATE forgotten_passwords
                             SET activated = 1 
-                            WHERE secret_key = ?", [$validate_secret->new_password, $validate_secret->email, $secret_key]);
+                            WHERE secret_key = ?", [$validateSecretKey->new_password, $validateSecretKey->email, $secret_key]);
                 
                 FlashMessage::info("Your password has been updated. Use your new password to log in but don't forget to change it as soon as possible.");
                 redirect(SITE_ADDR.'/public/user/login');
@@ -104,6 +131,17 @@ class PasswordRecovery
             FlashMessage::info("Invalid or expired code for activation.");
             redirect(SITE_ADDR.'/public/user/recovery');
         }
+    }
+    
+    private function validateSecretKey(string $secret_key)
+    {
+        $validate_secret = $this->db->getRow("SELECT * FROM forgotten_passwords WHERE secret_key = ?", [$secret_key]);
+        
+        if($validate_secret && strtotime($validate_secret->date_generated)+60*60*24 > time() && $validate_secret->activated < 1)
+        {
+            return $validate_secret;
+        }
+        return false;
     }
     
 }

@@ -35,8 +35,7 @@ class App
         
         $this->params = $url ? array_values($url) : [];
         
-        /**
-         * Check if the called method is public. 
+        /* Check if the called method is public. 
          * This is to prevent the user from opening private methods from the controller, e.g: /public/user/change_email which is used to access the model for changing the emails.
          */
         $reflection = new \ReflectionMethod($this->controller, $this->method);
@@ -47,18 +46,14 @@ class App
         
         call_user_func_array([$this->controller, $this->method], $this->params);
         
-        /**
-        * Checks if login cookie exists and log in the user
-        */
+        /* Checks if login cookie exists and log in the user*/
         if(isset($_COOKIE['cookie_hash']))
         {
             $login = new Login(Database::getInstance());
-            $login->cookieLogin($_COOKIE['cookie_hash']);
+            $login->loginWithCookie($_COOKIE['cookie_hash'], $_SESSION['username'], $_SERVER['HTTP_USER_AGENT']);
         }
        
-        /**
-        * Clear all Flash Messages 
-        */
+        /* Clear all Flash Messages */
         FlashMessage::clear();
     }
     

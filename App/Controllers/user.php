@@ -58,7 +58,7 @@ class User extends Controller
         if(isset($_POST['signup']))
         {        
             $users = $this->model('Auth\Register');
-            $signup = $users->register($_POST['username'], $_POST['email'], $_POST['password'], $_POST['csrf']);
+            $signup = $users->register($_POST['username'], $_POST['email'], $_POST['password'], $_POST['csrf'], $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
         }
         else
         {
@@ -93,27 +93,21 @@ class User extends Controller
     
     public function recovery(string $secret_key = null)
     {
-        /**
-         * Check if the user is logged in
-         */
+        /* Check if the user is logged in */
         $auth = new Authenticate($this->user_type);
         if($auth->isUser())
         {
             redirect(SITE_ADDR.'/public/home');
         }
         
-        /**
-         * If secret key is set, proceed to activating the new password
-         */
+        /* If secret key is set, proceed to activating the new password */
         if($secret_key != null)
         {
             $users = $this->model('Auth\PasswordRecovery');
-            $recovery = $users->activate($secret_key);
+            $recovery = $users->activatePass($secret_key);
         }
         
-        /**
-         * If secret key is empty, show the form for requesting a password change.
-         */
+        /* If secret key is empty, show the form for requesting a password change. */
         if(isset($_POST['recover']))
         {
             $users = $this->model('Auth\PasswordRecovery');
@@ -149,9 +143,7 @@ class User extends Controller
     
     public function settings(string $settings)
     {
-        /**
-         * Check if the user is logged in
-         */
+        /* Check if the user is logged in */
         $auth = new Authenticate($this->user_type);
         if(!$auth->isUser())
         {
@@ -165,20 +157,20 @@ class User extends Controller
                 break;
             
             case "email":
-                $this->change_email();
+                $this->changeEmail();
                 break;
             
             case "password":
-                $this->change_password();  
+                $this->changePassword();  
                 break;
         }
     }
     
-    private function change_email()
+    private function changeEmail()
     {
         if(isset($_POST['update']))
         {
-            $users = $this->model('Auth\Settings');
+            $users = $this->model('Auth\Settings\ChangeEmail');
             $update = $users->editEmail($_POST['email'], $_POST['email_repeat'], $_POST['password'], $_SESSION['userid'], $_POST['csrf']);
         }
         else
@@ -190,11 +182,11 @@ class User extends Controller
         }
     }
     
-    private function change_password()
+    private function changePassword()
     {
         if(isset($_POST['update']))
         {    
-            $users = $this->model('Auth\Settings');
+            $users = $this->model('Auth\Settings\ChangePassword');
             $update = $users->editPassword($_SESSION['userid'], $_POST['password'], $_POST['newpassword'], $_POST['newpassword_repeat'], $_POST['csrf']);
         }
         else

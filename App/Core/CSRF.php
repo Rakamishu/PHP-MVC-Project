@@ -15,7 +15,6 @@ class CSRF
     {
         if(hash_equals($_SESSION['csrf'], $token))
         {
-            unset($_SESSION['csrf']);
             return true;            
         }
         return false;     
