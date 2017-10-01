@@ -15,9 +15,7 @@ class Admin extends Controller
             $this->user_type = $_SESSION['type'];
         }
         
-        /**
-         * Authenticate if the user is logged in and has Admin Privileges
-         */
+        /*Authenticate if the user is logged in and has Admin Privileges  */
         $auth = new Authenticate($this->user_type);
         if(!$auth->isAdmin())
         {
@@ -39,9 +37,7 @@ class Admin extends Controller
     
     public function news(string $action, int $id = null)
     {
-        /**
-         * Separating the different actions.
-         */
+        /* Separating the different actions. */
         switch($action)
         {
             default:
@@ -92,9 +88,7 @@ class Admin extends Controller
             $data['news'] = $news->viewNews($id);
             $data['csrf'] = \App\Core\CSRF::generate();
             
-            /**
-             * If the news doesn't exist, redirect to 404.
-             */
+            /* If the news doesn't exist, redirect to 404. */
             if(!$data['news'])
             {
                 FlashMessage::error("News with this ID does not exist.");

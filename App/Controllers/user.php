@@ -17,18 +17,14 @@ class User extends Controller
     
     public function login()
     {
-        /**
-         * Check if the user is logged in
-         */
+        /* Check if the user is logged in */
         $auth = new Authenticate($this->user_type);
         if($auth->isUser())
         {
             redirect(SITE_ADDR.'/public/home');
         }
         
-        /**
-         * Check if the login form is submitted and proceed to authenticating and login the user, otherwise display the form
-         */
+        /* Check if the login form is submitted and proceed to authenticating and login the user, otherwise display the form */
         if(isset($_POST['login']))
         {
             $users = $this->model('Auth\Login');
@@ -46,9 +42,7 @@ class User extends Controller
     
     public function signup()
     {
-        /**
-         * Check if the user is logged in
-         */
+        /* Check if the user is logged in */
         $auth = new Authenticate($this->user_type);
         if($auth->isUser())
         {
