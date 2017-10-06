@@ -11,6 +11,7 @@ class News
     protected $db;
     private $title;
     private $content;
+    private $id;
     private $csrf;
     
     public function __construct() 
@@ -56,9 +57,9 @@ class News
         $this->content = $content;
         $this->csrf = $csrf;
         
-        if($this->validateAdd())
+        if($this->validate())
         {
-            FlashMessage::error(implode('<br />', $this->validateAdd()));
+            FlashMessage::error(implode('<br />', $this->validate()));
             redirect(SITE_ADDR.'/public/admin/news/add');
         }
             
@@ -70,7 +71,7 @@ class News
         }
     }
     
-    private function validateAdd()
+    private function validate()
     {
        if($this->csrf != \App\Core\CSRF::check($this->csrf))
         {
@@ -93,17 +94,22 @@ class News
      */
     public function edit(string $title, string $content, int $id, string $csrf)
     {
-        if(empty($title) || empty($content))
+        $this->title = $title;
+        $this->content = $content;
+        $this->id = $id;
+        $this->csrf = $csrf;
+        
+        if($this->validate())
         {
-            Flashmessage::error("All fields are required");
-            redirect(SITE_ADDR.'/public/admin/news/edit/'.$id);
+            FlashMessage::error(implode('<br />', $this->validate()));
+            redirect(SITE_ADDR.'/public/admin/news/edit/'.$this->id);
         }
             
-        $query = $this->db->updateRow("UPDATE news SET title = ?, content = ? WHERE id = ?", [$title, $content, $id]);
+        $query = $this->db->updateRow("UPDATE news SET title = ?, content = ? WHERE id = ?", [$this->title, $this->content, $this->id]);
         if($query)
         {
             FlashMessage::success("Successful!");
-            redirect(SITE_ADDR.'/public/admin/news/edit/'.$id);
+            redirect(SITE_ADDR.'/public/admin/news/edit/'.$this->id);
         }
         var_dump($query);
     }
