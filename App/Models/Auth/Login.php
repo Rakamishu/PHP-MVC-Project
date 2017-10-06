@@ -42,9 +42,9 @@ class Login
         $this->user_data_from_db = $this->db->getRows("SELECT userid, password, type FROM users WHERE username = ?", [$this->username]);
         
         /* Validate the login input. */
-        if($this->loginInputValidate())
+        if($this->validate())
         {
-            FlashMessage::error(implode('<br />', $this->loginInputValidate()));
+            FlashMessage::error(implode('<br />', $this->validate()));
             redirect(SITE_ADDR.'/public/user/login');
         }
         
@@ -97,7 +97,7 @@ class Login
         setcookie("cookie_hash", $this->csrf, time() + LOGIN_COOKIE_VALIDITY, '/');
     }
     
-    private function loginInputValidate()
+    private function validate()
     {
         /* Check against cross-site forgery */
         if(\App\Core\CSRF::check($this->csrf) === false)
