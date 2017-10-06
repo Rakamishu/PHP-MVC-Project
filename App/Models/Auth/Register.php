@@ -35,9 +35,9 @@ class Register
         $this->password_hash = $passwordEncryption->encrypt($this->password);
         
         /* Validate the user input */
-        if($this->registerInputValidate())
+        if($this->validate())
         {
-            FlashMessage::error(implode('<br />', $this->registerInputValidate()));
+            FlashMessage::error(implode('<br />', $this->validate()));
             redirect(SITE_ADDR.'/public/user/signup');
         }
         
@@ -64,7 +64,7 @@ class Register
             ]);
     }
     
-    private function registerInputValidate()
+    private function validate()
     {
         if(\App\Core\CSRF::check($this->csrf) === false)
         {
