@@ -11,11 +11,7 @@ class News extends Controller
         $news = $this->model('News\News');
         
         /* Get the current page */
-        $currentPage = isset($_GET['page']) ? $_GET['page'] : 1;
-        if($currentPage < 1)
-        {
-            $currentPage = 1;
-        }
+        $currentPage = (isset($_GET['page']) && $_GET['page'] > 1) ? $_GET['page'] : 1;
         
         /* Send the news from the current page and pagination as an array to the view. */
         $data['news'] = $news->allNews($currentPage, 10);

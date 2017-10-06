@@ -123,11 +123,7 @@ class Login
         }
         
         /* Return array with errors. */
-        if(empty($err))
-        {
-            return false;
-        }
-        return $err;
+        return empty($err) ? false : $err;
     }
     
     /**

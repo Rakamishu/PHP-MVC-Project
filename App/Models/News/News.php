@@ -9,6 +9,9 @@ class News
 {
     
     protected $db;
+    private $title;
+    private $content;
+    private $csrf;
     
     public function __construct() 
     {
@@ -49,38 +52,37 @@ class News
      */
     public function add(string $title, string $content, string $csrf)
     {
-        /**
-        * Check against cross-site forgery
-        */
-        if($csrf != \App\Core\CSRF::check($csrf))
-        {
-            $err[] = 'CSRF error.';
-        }
+        $this->title = $title;
+        $this->content = $content;
+        $this->csrf = $csrf;
         
-        /**
-         * Check if all fields are filled
-         */
-        if(empty($title) || empty($content) || empty($csrf))
+        if($this->validateAdd())
         {
-            $err[] = 'All fields are required';
-        }
-        
-        /**
-         * Check if any errors have been registered so far.
-         */
-        if($err)
-        {
-            FlashMessage::error(implode('<br />', $err));
+            FlashMessage::error(implode('<br />', $this->validateAdd()));
             redirect(SITE_ADDR.'/public/admin/news/add');
         }
-        
             
-        $query = $this->db->insertRow("INSERT INTO news (title, content) VALUES (?, ?)", [$title, $content]);
+        $query = $this->db->insertRow("INSERT INTO news (title, content) VALUES (?, ?)", [$this->title, $this->content]);
         if($query)
         {
             FlashMessage::success("Successful!");
             redirect(SITE_ADDR.'/public/admin/news/add');
         }
+    }
+    
+    private function validateAdd()
+    {
+       if($this->csrf != \App\Core\CSRF::check($this->csrf))
+        {
+            $err[] = 'CSRF error.';
+        }
+        
+        if(empty($this->title) || empty($this->content) || empty($this->csrf))
+        {
+            $err[] = 'All fields are required';
+        }
+        
+        return empty($err) ? false : $err;
     }
     
     /**
