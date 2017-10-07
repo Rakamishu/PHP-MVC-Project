@@ -8,28 +8,22 @@ use \App\Core\Mail as Mail;
 class Register
 {    
     
-    protected $db;
-    private $username;
-    private $email;
-    private $password;
-    private $password_hash;
-    private $csrf;
-    private $recaptcha;
-    private $ip;
+    private $db;
     
-    public function __construct() 
+    public function __construct($data = null) 
     {
         $this->db = \App\Core\Database::getInstance();
+        if(isset($data))
+        {
+            foreach($data as $key => $value)
+            {
+                $this->$key = $value;
+            }
+        }
     }
 
-    public function register(string $username, string $email, string $password, string $csrf, string $recaptcha, string $ip)
+    public function register()
     {
-        $this->username = $username;
-        $this->email = $email;
-        $this->password = $password;
-        $this->csrf = $csrf;
-        $this->recaptcha = $recaptcha;
-        $this->ip = $ip;
         /* Hash the password */
         $passwordEncryption = new \App\Models\Auth\PasswordEncryption();
         $this->password_hash = $passwordEncryption->encrypt($this->password);
@@ -47,13 +41,19 @@ class Register
         $this->sendMail();
         
         /* Login the newly registered user. */
-        $login = new \App\Models\Auth\Login();
-        $login->login($username, $password, false, \App\Core\CSRF::generate(), md5($_SERVER['HTTP_USER_AGENT']), "http://localhost/MVC/public/");
+        $login = new \App\Models\Auth\Login([
+            'username' => $this->username, 
+            'password' => $this->password, 
+            'remember_me' => false, 
+            'csrf' => \App\Core\CSRF::generate(), 
+            'user_agent' => md5($_SERVER['HTTP_USER_AGENT']), 
+            'redirect' => "http://localhost/MVC/public/"
+            ]);
+        $login->login();
     }
     
     private function registerAddToDb()
     {
-        
         $this->db->insertRow("INSERT INTO users 
             (username, email, password) 
             VALUES 

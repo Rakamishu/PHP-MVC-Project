@@ -8,26 +8,22 @@ use \App\Core\FlashMessage;
 class ChangeEmail
 {    
     
-    protected $db;
-    private $email;
-    private $email_repeat;
-    private $password;
-    private $userid;
-    private $csrf;
+    private $db;
     
-    public function __construct()
+    public function __construct($data = null) 
     {
         $this->db = \App\Core\Database::getInstance();
+        if(isset($data))
+        {
+            foreach($data as $key => $value)
+            {
+                $this->$key = $value;
+            }
+        }
     }
     
-    public function editEmail(string $email, string $email_repeat, string $password, int $userid, string $csrf)
-    {
-        $this->email = $email;
-        $this->email_repeat = $email_repeat;
-        $this->password = $password;
-        $this->userid = $userid;
-        $this->csrf = $csrf;
-        
+    public function editEmail()
+    {        
         /* Validate the user input */
         if($this->validateInput())
         {

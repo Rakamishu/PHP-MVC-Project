@@ -8,15 +8,18 @@ use App\Core\FlashMessage as FlashMessage;
 class News
 {
     
-    protected $db;
-    private $title;
-    private $content;
-    private $id;
-    private $csrf;
+    private $db;
     
-    public function __construct() 
+    public function __construct($data = null)
     {
         $this->db = \App\Core\Database::getInstance();
+        if(isset($data))
+        {
+            foreach($data as $key => $value)
+            {
+                $this->$key = $value;
+            }
+        }
     }
     
     /**
@@ -39,10 +42,9 @@ class News
      * @param int $newsid - ID of the news
      * @return array
      */
-    public function viewNews(int $newsid)
+    public function viewNews()
     {        
-        $getRow = $this->db->getRow("SELECT * FROM news WHERE id = ?", [$newsid]);
-        
+        $getRow = $this->db->getRow("SELECT * FROM news WHERE id = ?", [$this->id]);
         return $getRow;
     }
     
@@ -51,12 +53,8 @@ class News
      * @param string $title Title of the news
      * @param string $content Content of the news
      */
-    public function add(string $title, string $content, string $csrf)
+    public function add()
     {
-        $this->title = $title;
-        $this->content = $content;
-        $this->csrf = $csrf;
-        
         if($this->validate())
         {
             FlashMessage::error(implode('<br />', $this->validate()));
@@ -68,6 +66,28 @@ class News
         {
             FlashMessage::success("Successful!");
             redirect(SITE_ADDR.'/public/admin/news/add');
+        } 
+    }
+    
+    /**
+     * Edits the content of a particular news
+     * @param string $title New title of the news
+     * @param string $content New content of the news
+     * @param int $id The ID of the news that is being edited
+     */
+    public function edit()
+    {        
+        if($this->validate())
+        {
+            FlashMessage::error(implode('<br />', $this->validate()));
+            redirect(SITE_ADDR.'/public/admin/news/edit/'.$this->id);
+        }
+            
+        $query = $this->db->updateRow("UPDATE news SET title = ?, content = ? WHERE id = ?", [$this->title, $this->content, $this->id]);
+        if($query)
+        {
+            FlashMessage::success("Successful!");
+            redirect(SITE_ADDR.'/public/admin/news/edit/'.$this->id);
         }
     }
     
@@ -85,33 +105,4 @@ class News
         
         return empty($err) ? false : $err;
     }
-    
-    /**
-     * Edits the content of a particular news
-     * @param string $title New title of the news
-     * @param string $content New content of the news
-     * @param int $id The ID of the news that is being edited
-     */
-    public function edit(string $title, string $content, int $id, string $csrf)
-    {
-        $this->title = $title;
-        $this->content = $content;
-        $this->id = $id;
-        $this->csrf = $csrf;
-        
-        if($this->validate())
-        {
-            FlashMessage::error(implode('<br />', $this->validate()));
-            redirect(SITE_ADDR.'/public/admin/news/edit/'.$this->id);
-        }
-            
-        $query = $this->db->updateRow("UPDATE news SET title = ?, content = ? WHERE id = ?", [$this->title, $this->content, $this->id]);
-        if($query)
-        {
-            FlashMessage::success("Successful!");
-            redirect(SITE_ADDR.'/public/admin/news/edit/'.$this->id);
-        }
-        var_dump($query);
-    }
-    
 }

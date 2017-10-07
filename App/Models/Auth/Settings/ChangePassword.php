@@ -8,34 +8,30 @@ use \App\Core\FlashMessage;
 class ChangePassword
 {    
     
-    protected $db;
-    private $userid;
-    private $password;
-    private $newpassword;
-    private $newpassword_hashed;
-    private $newpassword_repeat;
-    private $csrf;
+    private $db;
     
-    public function __construct()
+    public function __construct($data = null) 
     {
         $this->db = \App\Core\Database::getInstance();
+        if(isset($data))
+        {
+            foreach($data as $key => $value)
+            {
+                $this->$key = $value;
+            }
+        }
     }
     
-    public function editPassword(int $userid, string $password, string $newpassword, string $newpassword_repeat, string $csrf)
+    public function editPassword()
     {
-        $this->userid = $userid;
-        $this->password = $password;
-        $this->newpassword = $newpassword;
         /* Save a hashed version of the new password */
         $passwordEncryption = new PasswordEncryption();
         $this->newpassword_hashed = $passwordEncryption->encrypt($this->newpassword);
-        $this->newpassword_repeat = $newpassword_repeat;
-        $this->csrf = $csrf;
         
         /* Validate the user input */
-        if($this->validateInput())
+        if($this->validate())
         {
-            FlashMessage::error(implode('<br />', $this->validateInput()));
+            FlashMessage::error(implode('<br />', $this->validate()));
             redirect(SITE_ADDR.'/public/user/settings/password');
         }
         
@@ -44,26 +40,24 @@ class ChangePassword
         redirect(SITE_ADDR.'/public/user/settings/password');
     }
     
-    private function validateInput()
+    private function validate()
     {
         if(\App\Core\CSRF::check($this->csrf) === false)
         {
             $err[] = 'CSRF error.';
         }
         
-        /* Check if the password is too short. */
+        /* Password */
         if(strlen($this->newpassword) <= 5)
         {
             $err[] = 'The password is too short.';
         }
         
-        /* Verify that password and password_repeat match */
         if($this->newpassword != $this->newpassword_repeat)
         {
             $err[] = 'Invalid password';
         }
         
-        /* Verify the new password is not the same as the old one */
         if($this->password == $this->newpassword)
         {
             $err[] = 'New password cannot be the same as your old one.';
@@ -79,8 +73,7 @@ class ChangePassword
         
         return empty($err) ? false : $err;
     }
-    
-    
+        
     public function updatePassword()
     {
         $this->db->updateRow('UPDATE users SET password = ? WHERE userid = ?', [$this->newpassword_hashed, $this->userid]);

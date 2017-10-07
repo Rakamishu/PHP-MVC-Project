@@ -58,8 +58,8 @@ class Admin extends Controller
     {
         if(isset($_POST['add']))
         {
-            $news = $this->model('News\News'); 
-            $data = $news->add($_POST['title'], $_POST['content'], $_POST['csrf']);
+            $news = $this->model('News\News', ['title' => $_POST['title'], 'content' => $_POST['content'], 'csrf' => $_POST['csrf']]); 
+            $news->add();
         }
         else 
         {
@@ -79,13 +79,13 @@ class Admin extends Controller
 
         if(isset($_POST['edit']))
         {
-            $news = $this->model('News\News'); 
-            $data = $news->edit($_POST['title'], $_POST['content'], $id, $_POST['csrf']);
+            $news = $this->model('News\News', ['title' => $_POST['title'], 'content' => $_POST['content'], 'id' => $id, 'csrf' => $_POST['csrf']]); 
+            $news->edit();
         }
         else 
         {
-            $news = $this->model('News\News'); 
-            $data['news'] = $news->viewNews($id);
+            $news = $this->model('News\News', ['id' => $id]); 
+            $data['news'] = $news->viewNews();
             $data['csrf'] = \App\Core\CSRF::generate();
             
             /* If the news doesn't exist, redirect to 404. */

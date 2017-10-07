@@ -5,10 +5,10 @@ namespace App\Core;
 class Controller
 {
     
-    public function model(string $model)
+    public function model(string $model, $data = null)
     {
         $class = "\App\Models\\$model";
-        return new $class();
+        return new $class($data);
     }
     
     public function view(string $view, array $data = [])

@@ -14,23 +14,27 @@ class PasswordRecovery
     private $csrf;
     private $user_data_from_db;
     
-    public function __construct() 
+    public function __construct($data = null) 
     {
         $this->db = \App\Core\Database::getInstance();
+        if(isset($data))
+        {
+            foreach($data as $key => $value)
+            {
+                $this->$key = $value;
+            }
+        }
     }
     
-    public function passwordRecovery(string $email, string $ip, string $csrf)
+    public function passwordRecovery()
     {
-        $this->email = $email;
-        $this->ip = $ip;
-        $this->csrf = $csrf;
         /* Get the username from the database */
         $this->user_data_from_db = $this->db->getRow("SELECT username FROM users WHERE email = ?", [$this->email]);
         
         /* Validate the user input */
-        if($this->recoveryInputValidate())
+        if($this->validate())
         {
-            FlashMessage::error(implode('<br />', $this->recoveryInputValidate()));
+            FlashMessage::error(implode('<br />', $this->validate()));
             redirect(SITE_ADDR.'/public/user/recovery');
         }
         
@@ -52,7 +56,7 @@ class PasswordRecovery
         }
     }
     
-    private function recoveryInputValidate()
+    private function validate()
     {
         if(\App\Core\CSRF::check($this->csrf) === false)
         {

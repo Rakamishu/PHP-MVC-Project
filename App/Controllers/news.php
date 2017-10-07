@@ -30,8 +30,8 @@ class News extends Controller
             error_404();
         }
         
-        $news = $this->model('News\News');
-        $data['news'] = $news->viewNews($newsid);
+        $news = $this->model('News\News', ['id' => $newsid]);
+        $data['news'] = $news->viewNews();
         
         if($data)
         {

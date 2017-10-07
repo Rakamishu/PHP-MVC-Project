@@ -8,18 +8,19 @@ use \App\Core\FlashMessage;
 class Login
 {    
     
-    protected $db;
-    private $username;
-    private $password;
-    private $remember_me;
-    private $csrf;
-    private $user_agent;
-    private $redirect;
+    private $db;
     private $user_data_from_db;
 
-    public function __construct() 
+    public function __construct($data = null) 
     {
         $this->db = Database::getInstance();
+        if(isset($data))
+        {
+            foreach($data as $key => $value)
+            {
+                $this->$key = $value;
+            }
+        }
     }
     
     /** 
@@ -30,14 +31,8 @@ class Login
      * @param String $user_agent - returns hashed user agent.
      * @param String|Null $redirect - URL to redirect to when login is successful. 
      */
-    public function login(string $username, string $password, bool $remember_me, string $csrf, string $user_agent, string $redirect)
+    public function login()
     {
-        $this->username = $username;
-        $this->password = $password;
-        $this->remember_me = $remember_me;
-        $this->csrf = $csrf;
-        $this->user_agent = $user_agent;
-        $this->redirect = $redirect;
         /* Get user password from the database. */
         $this->user_data_from_db = $this->db->getRows("SELECT userid, password, type FROM users WHERE username = ?", [$this->username]);
         
@@ -57,7 +52,7 @@ class Login
         /* Sets the login sessions */
         $this->loginSession();
         
-        redirect($redirect);
+        redirect($this->redirect);
     }
     
     private function loginSession()

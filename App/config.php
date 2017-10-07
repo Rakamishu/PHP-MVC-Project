@@ -1,6 +1,6 @@
 <?php
 
-define("APP_DEBUG", TRUE);
+//define("APP_DEBUG", TRUE);
 define("APP_ENV", 'development');
 
 switch(APP_ENV){
@@ -18,7 +18,6 @@ switch(APP_ENV){
         
         break;
 }
-
 
 define('ROOT', __DIR__);
 

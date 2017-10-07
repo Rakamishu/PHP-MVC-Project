@@ -27,9 +27,16 @@ class User extends Controller
         /* Check if the login form is submitted and proceed to authenticating and login the user, otherwise display the form */
         if(isset($_POST['login']))
         {
-            $users = $this->model('Auth\Login');
             $remember_me = isset($_POST['remember_me']) === true ? true : false;
-            $login = $users->login($_POST['username'], $_POST['password'], $remember_me, $_POST['csrf'], md5($_SERVER['HTTP_USER_AGENT']), SITE_ADDR.'/public/user/login'); 
+            $users = $this->model('Auth\Login', [
+                'username' => $_POST['username'], 
+                'password' => $_POST['password'], 
+                'remember_me' => $remember_me, 
+                'csrf' => $_POST['csrf'], 
+                'user_agent' => md5($_SERVER['HTTP_USER_AGENT']), 
+                'redirect' => SITE_ADDR.'/public/user/login'
+            ]);
+            $users->login(); 
         }
         else
         {
@@ -51,13 +58,19 @@ class User extends Controller
         
         if(isset($_POST['signup']))
         {        
-            $users = $this->model('Auth\Register');
-            $signup = $users->register($_POST['username'], $_POST['email'], $_POST['password'], $_POST['csrf'], $_POST['g-recaptcha-response'], $_SERVER['REMOTE_ADDR']);
+            $users = $this->model('Auth\Register', [
+                'username' => $_POST['username'], 
+                'email' => $_POST['email'], 
+                'password' => $_POST['password'], 
+                'csrf' => $_POST['csrf'], 
+                'recaptcha' => $_POST['g-recaptcha-response'], 
+                'ip' => $_SERVER['REMOTE_ADDR'],
+            ]);
+            $users->register();
         }
         else
         {
             $recaptcha = new ReCaptcha\ReCaptcha(GOOGLE_CAPTCHA);
-            
             $this->view('header', ['title' => 'Register']);
             $this->view('menu');
             $this->view('users/signup', ['recaptcha' => $recaptcha, 'csrf' => \App\Core\CSRF::generate()]);
@@ -98,14 +111,14 @@ class User extends Controller
         if($secret_key != null)
         {
             $users = $this->model('Auth\PasswordRecovery');
-            $recovery = $users->activatePass($secret_key);
+            $users->activatePass($secret_key);
         }
         
         /* If secret key is empty, show the form for requesting a password change. */
         if(isset($_POST['recover']))
         {
-            $users = $this->model('Auth\PasswordRecovery');
-            $recovery = $users->passwordRecovery($_POST['email'], $_SERVER['REMOTE_ADDR'], $_POST['csrf']);
+            $users = $this->model('Auth\PasswordRecovery', ['email' => $_POST['email'], 'ip' => $_SERVER['REMOTE_ADDR'], 'csrf' => $_POST['csrf']]);
+            $users->passwordRecovery();
         }
         else
         {
@@ -119,8 +132,8 @@ class User extends Controller
     
     public function profile(int $userid = null)
     {        
-        $users = $this->model('Auth\UserData');
-        $data = $users->userData($userid);
+        $users = $this->model('Auth\UserData', ['id' => $userid]);
+        $data = $users->userData();
         
         if($data)
         {
@@ -164,8 +177,14 @@ class User extends Controller
     {
         if(isset($_POST['update']))
         {
-            $users = $this->model('Auth\Settings\ChangeEmail');
-            $update = $users->editEmail($_POST['email'], $_POST['email_repeat'], $_POST['password'], $_SESSION['userid'], $_POST['csrf']);
+            $users = $this->model('Auth\Settings\ChangeEmail', [
+                'email' => $_POST['email'], 
+                'email_repeat' => $_POST['email_repeat'], 
+                'password' => $_POST['password'], 
+                'userid' => $_SESSION['userid'], 
+                'csrf' => $_POST['csrf']
+            ]);
+            $users->editEmail();
         }
         else
         {   
@@ -180,8 +199,14 @@ class User extends Controller
     {
         if(isset($_POST['update']))
         {    
-            $users = $this->model('Auth\Settings\ChangePassword');
-            $update = $users->editPassword($_SESSION['userid'], $_POST['password'], $_POST['newpassword'], $_POST['newpassword_repeat'], $_POST['csrf']);
+            $users = $this->model('Auth\Settings\ChangePassword', [
+                'userid' => $_SESSION['userid'], 
+                'password' => $_POST['password'], 
+                'newpassword' => $_POST['newpassword'], 
+                'newpassword_repeat' => $_POST['newpassword_repeat'], 
+                'csrf' => $_POST['csrf']
+            ]);
+            $users->editPassword();
         }
         else
         {   
