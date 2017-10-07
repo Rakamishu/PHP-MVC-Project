@@ -22,7 +22,6 @@ class UserData
     public function userData()
     {
         $query = $this->db->getRows("SELECT * FROM users WHERE userid = ?", [$this->id]);
-        
         return $query;
     }
     

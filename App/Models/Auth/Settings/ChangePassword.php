@@ -10,32 +10,24 @@ class ChangePassword
     
     private $db;
     
-    public function __construct($data = null) 
+    public function __construct($data) 
     {
         $this->db = \App\Core\Database::getInstance();
-        if(isset($data))
+        foreach($data as $key => $value)
         {
-            foreach($data as $key => $value)
-            {
-                $this->$key = $value;
-            }
+            $this->$key = $value;
         }
     }
     
     public function editPassword()
     {
-        /* Save a hashed version of the new password */
+        $this->validate();
+        
+        /* Hash the new password before saving to db */
         $passwordEncryption = new PasswordEncryption();
         $this->newpassword_hashed = $passwordEncryption->encrypt($this->newpassword);
         
-        /* Validate the user input */
-        if($this->validate())
-        {
-            FlashMessage::error(implode('<br />', $this->validate()));
-            redirect(SITE_ADDR.'/public/user/settings/password');
-        }
-        
-        $this->updatePassword();
+        $this->db->updateRow('UPDATE users SET password = ? WHERE userid = ?', [$this->newpassword_hashed, $this->userid]);
         FlashMessage::success('Your password has been changed.');
         redirect(SITE_ADDR.'/public/user/settings/password');
     }
@@ -62,21 +54,28 @@ class ChangePassword
         {
             $err[] = 'New password cannot be the same as your old one.';
         }
-        
-        /* Verify if the current password is correct */
-        $curr_password = $this->db->getRow("SELECT password FROM users WHERE userid = ?", [$this->userid]);
-        $passwordEncryption = new PasswordEncryption();
-        if($passwordEncryption->check($this->password, $curr_password->password) === false)
+
+        if($this->validate_password() === false)
         {
             $err[] = 'Wrong current password.';
         }
         
-        return empty($err) ? false : $err;
-    }
-        
-    public function updatePassword()
+        if($err)
+        {
+            FlashMessage::error(implode('<br />', $err));
+            redirect(SITE_ADDR.'/public/user/settings/password');
+        }
+    } 
+    
+    private function validate_password()
     {
-        $this->db->updateRow('UPDATE users SET password = ? WHERE userid = ?', [$this->newpassword_hashed, $this->userid]);
+        $curr_password = $this->db->getRow("SELECT password FROM users WHERE userid = ?", [$this->userid]);
+        $passwordEncryption = new PasswordEncryption();
+        if($passwordEncryption->check($this->password, $curr_password->password) === true)
+        {
+            return true;
+        }
+        return false;
     }
     
 }
