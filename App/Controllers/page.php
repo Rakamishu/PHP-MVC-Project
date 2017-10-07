@@ -1,13 +1,11 @@
 <?php
 
-use \App\Core\Controller;
-
-class Page extends Controller
+class Page extends \App\Core\Controller
 {
     
     /**
      * Open file from view/pages/ folder.
-     * @param String
+     * @param String $page
      */
     public function index(string $page = "404")
     {

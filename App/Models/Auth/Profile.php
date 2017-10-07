@@ -2,7 +2,7 @@
 
 namespace App\Models\Auth;
 
-class UserData
+class Profile
 {    
     
     private $db;
@@ -19,11 +19,10 @@ class UserData
         }
     }
     
-    public function userData()
+    public function profile()
     {
         $query = $this->db->getRows("SELECT * FROM users WHERE userid = ?", [$this->id]);
         return $query;
     }
-    
     
 }

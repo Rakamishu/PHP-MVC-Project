@@ -79,7 +79,7 @@ class Register
             $err[] = 'Error Authenticating'; 
         }
         
-        if($err) {
+        if(!empty($err)) {
             FlashMessage::error(implode('<br />', $err));
             redirect(SITE_ADDR.'/public/user/signup');
         }

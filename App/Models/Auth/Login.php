@@ -92,7 +92,7 @@ class Login
             $err[] = 'Incorrect password.';
         }
         
-        if($err) {
+        if(!empty($err)) {
             FlashMessage::error(implode('<br />', $err));
             redirect(SITE_ADDR.'/public/user/login');
         }
@@ -104,7 +104,8 @@ class Login
      * @param string $session - user's login session
      * @param string $agent - HTTP_USER_AGENT
      */
-    public function loginWithCookie(string $cookie, $session, string $agent){
+    public function loginWithCookie(string $cookie, $session, string $agent)
+    {
         if(!empty($cookie) && empty($session)){
             $this->user_data_from_db = $this->db->getRows("SELECT userid, username, type FROM users WHERE userid = ?", [$this->getUseridFromCookie($cookie)]);
             
@@ -122,7 +123,8 @@ class Login
      * Gets which user the cookie identifier belongs to.
      * @return int
      */
-    public function getUseridFromCookie(string $cookie){
+    public function getUseridFromCookie(string $cookie)
+    {
         $user_data_from_db = $this->db->getRow("SELECT userid FROM users_cookies WHERE cookie_hash = ?", [$cookie]);
         return $user_data_from_db->userid;
     }

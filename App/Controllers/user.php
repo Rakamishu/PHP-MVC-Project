@@ -1,9 +1,8 @@
 <?php
 
-use \App\Core\Controller as Controller;
 use \App\Models\Auth\Authenticate as Authenticate;
 
-class User extends Controller
+class User extends \App\Core\Controller
 {
     
     private $user_type;
@@ -120,40 +119,33 @@ class User extends Controller
             $users = $this->model('Auth\PasswordRecovery', ['email' => $_POST['email'], 'ip' => $_SERVER['REMOTE_ADDR'], 'csrf' => $_POST['csrf']]);
             $users->passwordRecovery();
         }
-        else
-        {
-            $this->view('header', ['title' => 'Password Recovery']);
-            $this->view('menu');
-            $this->view('users/recovery', ['csrf' => \App\Core\CSRF::generate()]);
-            $this->view('footer');
-        }
+        
+        $this->view('header', ['title' => 'Password Recovery']);
+        $this->view('menu');
+        $this->view('users/recovery', ['csrf' => \App\Core\CSRF::generate()]);
+        $this->view('footer');
     }
     
     
     public function profile(int $userid = null)
     {        
-        $users = $this->model('Auth\UserData', ['id' => $userid]);
-        $data = $users->userData();
-        
-        if($data)
-        {
-            $this->view('header', ['title' => 'Profile for user']);
-            $this->view('menu');
-            $this->view('users/view', $data);
-            $this->view('footer'); 
-        }
-        else 
-        {
+        $users = $this->model('Auth\Profile', ['id' => $userid]);
+        $data = $users->profile();
+        if(!$data) {
             error_404();
         }
+        
+        $this->view('header', ['title' => 'Profile for user']);
+        $this->view('menu');
+        $this->view('users/view', $data);
+        $this->view('footer'); 
     }
     
     public function settings(string $settings)
     {
         /* Check if the user is logged in */
         $auth = new Authenticate($this->user_type);
-        if(!$auth->isUser())
-        {
+        if(!$auth->isUser()) {
             redirect(SITE_ADDR.'/public/home');
         }
         
@@ -186,13 +178,10 @@ class User extends Controller
             ]);
             $users->editEmail();
         }
-        else
-        {   
-            $this->view('header', ['title' => 'Update Email']);
-            $this->view('menu');
-            $this->view('users/edit_email', ['csrf' => \App\Core\CSRF::generate()]);
-            $this->view('footer');
-        }
+        $this->view('header', ['title' => 'Update Email']);
+        $this->view('menu');
+        $this->view('users/edit_email', ['csrf' => \App\Core\CSRF::generate()]);
+        $this->view('footer');
     }
     
     private function changePassword()
@@ -207,14 +196,11 @@ class User extends Controller
                 'csrf' => $_POST['csrf']
             ]);
             $users->editPassword();
-        }
-        else
-        {   
-            $this->view('header', ['title' => 'Update Password']);
-            $this->view('menu');
-            $this->view('users/edit_password', ['csrf' => \App\Core\CSRF::generate()]);
-            $this->view('footer');
-        } 
+        }  
+        $this->view('header', ['title' => 'Update Password']);
+        $this->view('menu');
+        $this->view('users/edit_password', ['csrf' => \App\Core\CSRF::generate()]);
+        $this->view('footer');
     }
     
 }

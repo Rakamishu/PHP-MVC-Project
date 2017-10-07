@@ -56,7 +56,7 @@ class ChangeEmail
             $err[] = 'Invalid password';
         }
         
-        if($err) {
+        if(!empty($err)) {
             FlashMessage::error(implode('<br />', $err));
             redirect(SITE_ADDR.'/public/user/settings/email');
         }

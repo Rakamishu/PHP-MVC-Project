@@ -1,9 +1,6 @@
 <?php
 
-use \App\Core\Controller as Controller;
-use \App\Models\Pagination as Pagination;
-
-class News extends Controller
+class News extends \App\Core\Controller
 {
     
     public function index()
@@ -15,7 +12,7 @@ class News extends Controller
         
         /* Send the news from the current page and pagination as an array to the view. */
         $data['news'] = $news->allNews($currentPage, 10);
-        $pagination = new Pagination('news', $currentPage, 10);
+        $pagination = new \App\Models\Pagination('news', $currentPage, 10);
         $data['pagination'] = $pagination->createLinks(SITE_ADDR.'/public/news?page=');
         
         $this->view('header', ['title' => 'Most Recent News']);
@@ -32,18 +29,15 @@ class News extends Controller
         
         $news = $this->model('News\News', ['id' => $newsid]);
         $data['news'] = $news->viewNews();
-        
-        if($data)
-        {
-            $this->view('header', ['title' => $data['news']->title]);
-            $this->view('menu');
-            $this->view('news/view', $data);
-            $this->view('footer');
-        }
-        else 
-        {
+        if(!$data) {
             error_404();
         }
+        
+        $this->view('header', ['title' => $data['news']->title]);
+        $this->view('menu');
+        $this->view('news/view', $data);
+        $this->view('footer');
+
     }
     
 }

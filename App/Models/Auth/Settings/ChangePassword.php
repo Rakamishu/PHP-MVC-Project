@@ -9,6 +9,7 @@ class ChangePassword
 {    
     
     private $db;
+    private $user_data_from_db;
     
     public function __construct($data) 
     {
@@ -17,6 +18,7 @@ class ChangePassword
         {
             $this->$key = $value;
         }
+        $this->user_data_from_db = $this->db->getRow("SELECT username, password, email FROM users WHERE userid = ?", [$this->userid]);
     }
     
     public function editPassword()
@@ -24,59 +26,71 @@ class ChangePassword
         $this->validate();
         
         /* Hash the new password before saving to db */
-        $passwordEncryption = new PasswordEncryption();
-        $this->newpassword_hashed = $passwordEncryption->encrypt($this->newpassword);
+        $this->encryptNewPassword();
         
         $this->db->updateRow('UPDATE users SET password = ? WHERE userid = ?', [$this->newpassword_hashed, $this->userid]);
+        $this->sendMail();
         FlashMessage::success('Your password has been changed.');
         redirect(SITE_ADDR.'/public/user/settings/password');
     }
     
     private function validate()
     {
-        if(\App\Core\CSRF::check($this->csrf) === false)
-        {
+        if(\App\Core\CSRF::check($this->csrf) === false) {
             $err[] = 'CSRF error.';
         }
         
         /* Password */
-        if(strlen($this->newpassword) <= 5)
-        {
+        if(strlen($this->newpassword) <= 5) {
             $err[] = 'The password is too short.';
         }
         
-        if($this->newpassword != $this->newpassword_repeat)
-        {
+        if($this->newpassword != $this->newpassword_repeat) {
             $err[] = 'Invalid password';
         }
         
-        if($this->password == $this->newpassword)
-        {
+        if($this->password == $this->newpassword) {
             $err[] = 'New password cannot be the same as your old one.';
         }
 
-        if($this->validate_password() === false)
-        {
+        if($this->validateCurrentPassword() === false) {
             $err[] = 'Wrong current password.';
         }
         
-        if($err)
-        {
+        if(!empty($err)) {
             FlashMessage::error(implode('<br />', $err));
             redirect(SITE_ADDR.'/public/user/settings/password');
         }
     } 
     
-    private function validate_password()
+    private function validateCurrentPassword()
     {
-        $curr_password = $this->db->getRow("SELECT password FROM users WHERE userid = ?", [$this->userid]);
         $passwordEncryption = new PasswordEncryption();
-        if($passwordEncryption->check($this->password, $curr_password->password) === true)
+        if($passwordEncryption->check($this->password, $this->user_data_from_db->password) === true)
         {
             return true;
         }
         return false;
     }
     
+    private function encryptNewPassword()
+    {
+        $passwordEncryption = new PasswordEncryption();
+        $this->newpassword_hashed = $passwordEncryption->encrypt($this->newpassword);
+    }
+    
+    private function sendMail()
+    {
+        $mail = new \App\Core\Mail();
+        $mail->send(
+                $this->user_data_from_db->email, //Receiver
+                "Your password changed", // Subject
+                "Hello, ".$this->user_data_from_db->username."<br>"
+                . "Your password for your account in ".SITE_ADDR." was changed<br>"
+                . "If it was you you can safely ignore this email.<br><br>"
+                . "if it wasn't you, this means your account has been compromies.<br>"
+                . "Please reset your password as soon as possible.<br>"
+                );
+    }
 }
 

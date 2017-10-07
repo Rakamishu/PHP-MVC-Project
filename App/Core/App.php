@@ -2,8 +2,6 @@
 
 namespace App\Core;
 
-use \App\Models\Auth\Login as Login;
-
 class App
 {
     
@@ -49,7 +47,7 @@ class App
         /* Checks if login cookie exists and log in the user*/
         if(isset($_COOKIE['cookie_hash']))
         {
-            $login = new Login(Database::getInstance());
+            $login = new \App\Models\Auth\Login(Database::getInstance());
             $login->loginWithCookie($_COOKIE['cookie_hash'], $_SESSION['username'], $_SERVER['HTTP_USER_AGENT']);
         }
        

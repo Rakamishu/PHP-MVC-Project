@@ -1,8 +1,6 @@
 <?php
 
-use \App\Core\Controller as Controller;
-
-class Home extends Controller
+class Home extends \App\Core\Controller
 {    
     
     public function index()

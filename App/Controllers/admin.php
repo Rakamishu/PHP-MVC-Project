@@ -1,10 +1,8 @@
 <?php
 
-use \App\Core\Controller as Controller;
-use \App\Models\Auth\Authenticate as Authenticate;
 use \App\Core\FlashMessage as FlashMessage;
 
-class Admin extends Controller
+class Admin extends \App\Core\Controller
 {    
     
     private $user_type;
@@ -16,7 +14,7 @@ class Admin extends Controller
         }
         
         /*Authenticate if the user is logged in and has Admin Privileges  */
-        $auth = new Authenticate($this->user_type);
+        $auth = new \App\Models\Auth\Authenticate($this->user_type);
         if(!$auth->isAdmin())
         {
             redirect(SITE_ADDR.'/public/home');

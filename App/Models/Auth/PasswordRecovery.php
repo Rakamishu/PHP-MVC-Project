@@ -55,7 +55,7 @@ class PasswordRecovery
             $err[] = "This email is not used by anyone.";
         }
         
-        if($err) {
+        if(!empty($err)) {
             FlashMessage::error(implode('<br />', $err));
             redirect(SITE_ADDR.'/public/user/recovery');
         }
@@ -69,7 +69,6 @@ class PasswordRecovery
         $random_string = str_shuffle("1234567890QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm!@#$%^&*(-=.");
         $this->secret_key = md5(substr($random_string, 0, 32));
         $this->new_password_readable = substr($random_string, 0, 10);
-        
         /* Hash the new password */
         $passwordEncryption = new \App\Models\Auth\PasswordEncryption();
         $this->new_password_hashed = $passwordEncryption->encrypt($this->new_password_readable);
