@@ -18,6 +18,7 @@ class Mail
             $mail->SMTPAuth = true;                               // Enable SMTP authentication
             $mail->Username = 'mihailbusnss@gmail.com';                 // SMTP username
             $mail->Password = '';                           // SMTP password
+            $mail->Password = 'damnshit11';                           // SMTP password
             $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
             $mail->Port = 587;                                    // TCP port to connect to
             
