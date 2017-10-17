@@ -27,3 +27,10 @@ define('SITE_KEYWORDS', 'TV Series, TV Shows, Calendar, Schedule, Planner');
 define('SITE_DESC', 'Schedule, Follow and Explore your favorite TV Series');
 
 define('LOGIN_COOKIE_VALIDITY', 2592000); // 2592000 seconds = 30 days
+
+$GLOBALS['servicesCredentials'] = [
+    'facebook' => [
+        'key'       => '509584796053717',
+        'secret'    => '9f3da2da310c925ec7d4e7de6ae48d14',
+    ]
+];

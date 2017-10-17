@@ -53,7 +53,7 @@ class Register
             $err[] = 'Invalid E-mail address.';
         }
         
-        if(!$this->checkIfEmailIsTaken()) {
+        if(!$this->checkIfEmailIsTaken($this->email)) {
             $err[] = 'This email is already being used by another user';
         }
         
@@ -63,7 +63,7 @@ class Register
         }
         
         /* Username */
-        if(!$this->checkIfUsernamelIsTaken()) {
+        if(!$this->checkIfUsernamelIsTaken($this->username)) {
             $err[] = 'This username is already being used by another user.';
         }
         
@@ -95,9 +95,10 @@ class Register
         return false;
     }
         
-    private function checkIfUsernamelIsTaken()
+    protected function checkIfUsernamelIsTaken($username)
     {
-        $username_unique = $this->db->getRow("SELECT COUNT(*) as count FROM users WHERE username = ?", [$this->username]);
+        $this->db = \App\Core\Database::getInstance();
+        $username_unique = $this->db->getRow("SELECT COUNT(*) as count FROM users WHERE username = ?", [$username]);
         if($username_unique->count == 0)
         {
             return true;
@@ -105,24 +106,25 @@ class Register
         return false;
     }
     
-    private function checkIfEmailIsTaken()
+    protected function checkIfEmailIsTaken($email)
     {
-        $email_unique = $this->db->getRow("SELECT COUNT(*) as count FROM users WHERE email = ?", [$this->email]);
+        $this->db = \App\Core\Database::getInstance();
+        $email_unique = $this->db->getRow("SELECT COUNT(*) as count FROM users WHERE email = ?", [$email]);
         if($email_unique->count == 0) {
             return true;
         }
         return false;
     }
     
-    private function sendMail()
+    protected function sendMail()
     {
         $mail = new Mail();
         $mail->send(
             $this->email, 
-            "Welcome to ".$GLOBALS['site_name'], 
-            "Hello, $this->username <br /><br />Thank you for joining us here at ".$GLOBALS['site_name']."! "
+            "Welcome to ".SITE_NAME, 
+            "Hello, $this->username <br /><br />Thank you for joining us here at ".SITE_NAME."! "
             . "You can now use your account to create your personal calendar with your favorite TV Series! <br /><br /> "
-            . "The ".$GLOBALS['site_name']." team"
+            . "The ".SITE_NAME." team"
         );
     }
     

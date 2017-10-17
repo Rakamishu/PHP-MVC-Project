@@ -47,8 +47,9 @@ class App
         /* Checks if login cookie exists and log in the user*/
         if(isset($_COOKIE['cookie_hash']))
         {
-            $login = new \App\Models\Auth\Login(Database::getInstance());
-            $login->loginWithCookie($_COOKIE['cookie_hash'], $_SESSION['username'], $_SERVER['HTTP_USER_AGENT']);
+            $login = new \App\Models\Auth\Login();
+            $username_session = isset($_SESSION['username']) ? $_SESSION['username'] : null;
+            $login->loginWithCookie($_COOKIE['cookie_hash'], $username_session, $_SERVER['HTTP_USER_AGENT']);
         }
        
         /* Clear all Flash Messages */

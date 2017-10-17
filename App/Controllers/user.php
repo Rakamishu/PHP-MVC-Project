@@ -1,6 +1,7 @@
 <?php
 
 use \App\Models\Auth\Authenticate as Authenticate;
+use App\Models\Auth\OAuth\FacebookLogin as FacebookLogin;
 
 class User extends \App\Core\Controller
 {
@@ -14,16 +15,41 @@ class User extends \App\Core\Controller
         }
     }
     
-    public function login()
+    public function login($type = null)
     {
         /* Check if the user is logged in */
         $auth = new Authenticate($this->user_type);
-        if($auth->isUser())
-        {
+        if($auth->isUser()) {
             redirect(SITE_ADDR.'/public/home');
         }
-        
-        /* Check if the login form is submitted and proceed to authenticating and login the user, otherwise display the form */
+        switch($type)
+        {
+            default: 
+                $this->standardLogin();
+                break;
+            case "facebook":
+                $this->facebookLogin();
+                break;
+        }
+    }
+    
+    private function facebookLogin()
+    {
+        $facebook_login = new FacebookLogin();
+        $facebook_login->getLoginLink();
+        if(!empty($_GET['fb-login']) && $_GET['fb-login'] === 'true')
+        {
+            $facebook_login->getLoginAuth();
+        } 
+        elseif(!empty($_GET['code']))
+        {
+            $facebook_login->getLoginResult($_GET['state'], $_GET['code']);
+        }
+    }
+    
+    
+    private function standardLogin()
+    {
         if(isset($_POST['login']))
         {
             $remember_me = isset($_POST['remember_me']) === true ? true : false;
@@ -37,24 +63,31 @@ class User extends \App\Core\Controller
             ]);
             $users->login(); 
         }
-        else
+        $this->view('header', ['title' => 'Login']);
+        $this->view('menu');
+        $this->view('users/login', ['csrf' => \App\Core\CSRF::generate()]);
+        $this->view('footer');
+    }
+    
+    public function signup($type = null)
+    {
+        $auth = new Authenticate($this->user_type);
+        if($auth->isUser()) {
+            redirect(SITE_ADDR.'/public/home');
+        }
+        switch($type)
         {
-            $this->view('header', ['title' => 'Login']);
-            $this->view('menu');
-            $this->view('users/login', ['csrf' => \App\Core\CSRF::generate()]);
-            $this->view('footer');
+            default: 
+                $this->normalSignup();
+                break;
+            case "facebook":
+                $this->facebookSignup();
+                break;
         }
     }
     
-    public function signup()
+    public function normalSignup()
     {
-        /* Check if the user is logged in */
-        $auth = new Authenticate($this->user_type);
-        if($auth->isUser())
-        {
-            redirect(SITE_ADDR.'/public/home');
-        }
-        
         if(isset($_POST['signup']))
         {        
             $users = $this->model('Auth\Register', [
@@ -67,14 +100,29 @@ class User extends \App\Core\Controller
             ]);
             $users->register();
         }
-        else
-        {
-            $recaptcha = new ReCaptcha\ReCaptcha(GOOGLE_CAPTCHA);
-            $this->view('header', ['title' => 'Register']);
-            $this->view('menu');
-            $this->view('users/signup', ['recaptcha' => $recaptcha, 'csrf' => \App\Core\CSRF::generate()]);
-            $this->view('footer');
+        $recaptcha = new ReCaptcha\ReCaptcha(GOOGLE_CAPTCHA);
+        $this->view('header', ['title' => 'Register']);
+        $this->view('menu');
+        $this->view('users/signup', ['recaptcha' => $recaptcha, 'csrf' => \App\Core\CSRF::generate()]);
+        $this->view('footer');
+    }
+    
+    public function facebookSignup()
+    {
+        if(isset($_POST['signup']))
+        {        
+            $users = $this->model('Auth\FacebookRegister', [
+                'username' => $_POST['username'], 
+                'email' => $_POST['email'], 
+                'csrf' => $_POST['csrf'],
+                'facebook_id' => $_SESSION['fb-login-id']
+            ]);
+            $users->register();
         }
+        $this->view('header', ['title' => 'Register']);
+        $this->view('menu');
+        $this->view('users/oauth_signup', ['csrf' => \App\Core\CSRF::generate()]);
+        $this->view('footer');
     }
     
     public function logout()

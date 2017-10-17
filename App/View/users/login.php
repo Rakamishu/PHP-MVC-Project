@@ -19,3 +19,11 @@
     </div>
     <button type="submit" class="btn btn-default btn-block" name="login">Login</button>
 </form>
+
+<a href="http://localhost/MVC/public/user/login/facebook">Login with Facebook</a>
+<?php if(isset($_SESSION['id'])): ?>
+    <?= $_SESSION['fb-login-id']; ?>
+    name:<?= $_SESSION['fb-login-name']; ?>
+<?php endif; ?>
+
+<?php var_dump($_SESSION); ?>

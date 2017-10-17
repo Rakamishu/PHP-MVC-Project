@@ -104,9 +104,9 @@ class Login
      * @param string $session - user's login session
      * @param string $agent - HTTP_USER_AGENT
      */
-    public function loginWithCookie(string $cookie, $session, string $agent)
+    public function loginWithCookie(string $cookie, $username_session = null, string $agent)
     {
-        if(!empty($cookie) && empty($session)){
+        if(!empty($cookie) && empty($username_session)){
             $this->user_data_from_db = $this->db->getRows("SELECT userid, username, type FROM users WHERE userid = ?", [$this->getUseridFromCookie($cookie)]);
             
             $_SESSION['userid']          = $this->user_data_from_db[0]->userid;
