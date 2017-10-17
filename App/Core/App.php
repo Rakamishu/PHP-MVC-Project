@@ -44,7 +44,6 @@ class App
         
         call_user_func_array([$this->controller, $this->method], $this->params);
         
-        /* Checks if login cookie exists and log in the user*/
         if(isset($_COOKIE['cookie_hash']))
         {
             $login = new \App\Models\Auth\Login();
