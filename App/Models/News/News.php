@@ -2,7 +2,6 @@
 
 namespace App\Models\News;
 
-use App\Models\Pagination as Pagination;
 use App\Core\FlashMessage as FlashMessage;
 
 class News

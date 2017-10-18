@@ -3,7 +3,6 @@
 namespace App\Models\Auth;
 
 use \App\Core\Database;
-use \App\Core\FlashMessage;
 
 class FacebookLogin
 {    

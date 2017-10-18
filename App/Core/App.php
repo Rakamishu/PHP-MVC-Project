@@ -47,7 +47,7 @@ class App
         /* Checks if login cookie exists and logs in the user*/
         if(isset($_COOKIE['cookie_hash']))
         {
-            $login = new \App\Models\Auth\Login();
+            $login = new \App\Models\Auth\CookieLogin();
             $username_session = isset($_SESSION['username']) ? $_SESSION['username'] : null;
             $login->loginWithCookie($_COOKIE['cookie_hash'], $username_session, $_SERVER['HTTP_USER_AGENT']);
         }

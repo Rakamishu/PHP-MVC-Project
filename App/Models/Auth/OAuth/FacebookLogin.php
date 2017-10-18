@@ -2,7 +2,6 @@
 
 namespace App\Models\Auth\OAuth;
 
-use OAuth\OAuth2\Service\Facebook;
 use OAuth\Common\Storage\Session;
 use OAuth\Common\Consumer\Credentials;
 use OAuth\ServiceFactory;

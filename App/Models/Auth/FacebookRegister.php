@@ -6,7 +6,7 @@ use \App\Core\FlashMessage;
 use \App\Core\Mail as Mail;
 
 class FacebookRegister extends Register
-{    
+{
     
     private $db;
     
@@ -71,37 +71,6 @@ class FacebookRegister extends Register
             redirect(SITE_ADDR.'/public/user/signup/facebook');
         }
     }
-        
-//    private function checkIfUsernamelIsTaken()
-//    {
-//        $username_unique = $this->db->getRow("SELECT COUNT(*) as count FROM users WHERE username = ?", [$this->username]);
-//        if($username_unique->count == 0)
-//        {
-//            return true;
-//        }
-//        return false;
-//    }
-//    
-//    private function checkIfEmailIsTaken()
-//    {
-//        $email_unique = $this->db->getRow("SELECT COUNT(*) as count FROM users WHERE email = ?", [$this->email]);
-//        if($email_unique->count == 0) {
-//            return true;
-//        }
-//        return false;
-//    }
-    
-//    private function sendMail()
-//    {
-//        $mail = new Mail();
-//        $mail->send(
-//            $this->email, 
-//            "Welcome to ".SITE_NAME, 
-//            "Hello, $this->username <br /><br />Thank you for joining us here at ".SITE_NAME."! "
-//            . "You can now use your account to create your personal calendar with your favorite TV Series! <br /><br /> "
-//            . "The ".SITE_NAME." team"
-//        );
-//    }
     
     private function login()
     {
