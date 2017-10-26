@@ -2,18 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ee4f8b3b-583e-4a69-babd-406766393664" name="Default" comment="">
+      <change type="DELETED" beforePath="$PROJECT_DIR$/App/Core/Mailer.php" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App/Controllers/user.php" afterPath="$PROJECT_DIR$/App/Controllers/user.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App/Core/Database.php" afterPath="$PROJECT_DIR$/App/Core/Database.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App/Models/Auth/CookieLogin.php" afterPath="$PROJECT_DIR$/App/Models/Auth/CookieLogin.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App/Models/Auth/Login.php" afterPath="$PROJECT_DIR$/App/Models/Auth/Login.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App/Models/Auth/OAuth/FacebookLogin.php" afterPath="$PROJECT_DIR$/App/Models/Auth/OAuth/FacebookLogin.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App/Models/Auth/Register.php" afterPath="$PROJECT_DIR$/App/Models/Auth/Register.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App/Models/News/News.php" afterPath="$PROJECT_DIR$/App/Models/News/News.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App/View/users/login.php" afterPath="$PROJECT_DIR$/App/View/users/login.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App/config.php" afterPath="$PROJECT_DIR$/App/config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/App/functions/functions.php" afterPath="$PROJECT_DIR$/App/functions/functions.php" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/App/Core/Mailer.php" afterPath="$PROJECT_DIR$/App/Core/Mail.php" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -24,11 +14,41 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Database.php" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Database.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/App/Core/Database.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="17">
               <caret line="7" column="1" lean-forward="true" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitattributes" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitattributes">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nbproject/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="136">
+              <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1" column="6" lean-forward="false" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
               <folding />
             </state>
           </provider>
@@ -66,6 +86,7 @@
         <option value="$PROJECT_DIR$/App/Controllers/user.php" />
         <option value="$PROJECT_DIR$/App/Models/Auth/Register.php" />
         <option value="$PROJECT_DIR$/App/Models/News/News.php" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -186,12 +207,12 @@
       <workItem from="1508866819618" duration="937000" />
       <workItem from="1508926464342" duration="1349000" />
       <workItem from="1509013928301" duration="64000" />
-      <workItem from="1509031946075" duration="16000" />
+      <workItem from="1509031946075" duration="166000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="12116000" />
+    <option name="totallyTimeSpent" value="12266000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -230,34 +251,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/composer.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="27" lean-forward="true" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/App/Models/News/News.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="34" column="80" lean-forward="false" selection-start-line="34" selection-start-column="80" selection-end-line="34" selection-end-column="80" />
-          <folding>
-            <marker date="1508927197348" expanded="true" signature="699:753" ph="SELECT * FRO... news" />
-            <marker date="1508927197348" expanded="true" signature="936:967" ph="SELECT * FRO... news" />
-            <marker date="1508927197348" expanded="true" signature="1171:1218" ph="INSERT INTO news... " />
-            <marker date="1508927197348" expanded="true" signature="1534:1585" ph="UPDATE news " />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/App/Core/App.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="935">
-          <caret line="55" column="30" lean-forward="true" selection-start-line="55" selection-start-column="30" selection-end-line="55" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/App/config.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="493">
@@ -662,6 +655,30 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="17">
           <caret line="7" column="1" lean-forward="true" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitattributes">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nbproject/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="8" column="0" lean-forward="true" selection-start-line="8" selection-start-column="0" selection-end-line="8" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" column="6" lean-forward="false" selection-start-line="1" selection-start-column="6" selection-end-line="1" selection-end-column="6" />
           <folding />
         </state>
       </provider>
