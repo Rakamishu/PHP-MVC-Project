@@ -10,7 +10,7 @@ switch(APP_ENV){
         define("DB_PASSWORD", "");
         define("DB_NAME", "custom_system");
         
-        define("GOOGLE_CAPTCHA", "6LdngyEUAAAAANQH9WygKfMi8xvCI_cDw5DMpTXI");
+        define("GOOGLE_CAPTCHA_SECRET", "6LdngyEUAAAAANQH9WygKfMi8xvCI_cDw5DMpTXI");
         break;
     case 'production':
         

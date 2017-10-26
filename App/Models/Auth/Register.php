@@ -87,7 +87,7 @@ class Register
     
     private function validateRecaptcha()
     {
-        $recaptcha = new \ReCaptcha\ReCaptcha(GOOGLE_CAPTCHA);
+        $recaptcha = new \ReCaptcha\ReCaptcha(GOOGLE_CAPTCHA_SECRET);
         $resp = $recaptcha->verify($this->recaptcha, $this->ip);
         if ($resp->isSuccess()) {
             return true;
@@ -136,7 +136,7 @@ class Register
             'remember_me' => false, 
             'csrf' => \App\Core\CSRF::generate(), 
             'user_agent' => md5($_SERVER['HTTP_USER_AGENT']), 
-            'redirect' => SITE_ADDR
+            'redirect' => SITE_ADDR.'/public'
             ]);
         $login->login();
     }

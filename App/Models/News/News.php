@@ -12,6 +12,7 @@ class News
     public function __construct($data = null)
     {
         $this->db = \App\Core\Database::getInstance();
+        
         if(isset($data))
         {
             foreach($data as $key => $value)
@@ -72,9 +73,8 @@ class News
         if(empty($this->title) || empty($this->content) || empty($this->csrf)) {
             $err[] = 'All fields are required';
         }
-        
-        if($err)
-        {
+
+        if(!empty($err)) {
             FlashMessage::error(implode('<br />', $err));
             redirect(SITE_ADDR.'/public/admin/news/add');
         }

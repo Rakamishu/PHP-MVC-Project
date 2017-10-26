@@ -58,7 +58,7 @@ class User extends \App\Core\Controller
                 'password' => $_POST['password'], 
                 'remember_me' => $remember_me, 
                 'csrf' => $_POST['csrf'], 
-                'user_agent' => md5($_SERVER['HTTP_USER_AGENT']), 
+                'user_agent' => $_SERVER['HTTP_USER_AGENT'],
                 'redirect' => SITE_ADDR.'/public/user/login'
             ]);
             $users->login(); 
@@ -78,7 +78,7 @@ class User extends \App\Core\Controller
         switch($type)
         {
             default: 
-                $this->normalSignup();
+                $this->standardSignup();
                 break;
             case "facebook":
                 $this->facebookSignup();
@@ -86,7 +86,7 @@ class User extends \App\Core\Controller
         }
     }
     
-    public function normalSignup()
+    public function standardSignup()
     {
         if(isset($_POST['signup']))
         {        
@@ -100,7 +100,7 @@ class User extends \App\Core\Controller
             ]);
             $users->register();
         }
-        $recaptcha = new ReCaptcha\ReCaptcha(GOOGLE_CAPTCHA);
+        $recaptcha = new ReCaptcha\ReCaptcha(GOOGLE_CAPTCHA_SECRET);
         $this->view('header', ['title' => 'Register']);
         $this->view('menu');
         $this->view('users/signup', ['recaptcha' => $recaptcha, 'csrf' => \App\Core\CSRF::generate()]);
@@ -129,8 +129,7 @@ class User extends \App\Core\Controller
     {
         setcookie("cookie_hash", '', 0, '/');
         session_destroy();
-        
-        redirect("http://localhost/MVC/public/user/login");
+        redirect(SITE_ADDR."/public/");
     }
     
     public function index()

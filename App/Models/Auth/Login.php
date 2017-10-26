@@ -45,7 +45,7 @@ class Login
     {
         $_SESSION['userid']          = $this->user_data_from_db[0]->userid;
         $_SESSION['username']        = $this->username;
-        $_SESSION['HTTP_USER_AGENT'] = $this->user_agent;
+        $_SESSION['HTTP_USER_AGENT'] = md5($this->user_agent);
         $_SESSION['type']            = $this->user_data_from_db[0]->type;
     }
     

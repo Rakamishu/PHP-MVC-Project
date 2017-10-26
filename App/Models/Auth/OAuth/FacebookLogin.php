@@ -22,7 +22,7 @@ class FacebookLogin
         $this->storage = new Session();
         $this->serviceCredentials = $GLOBALS['servicesCredentials'];
         $this->serviceFactory = new ServiceFactory();
-        $this->currentUri = new Uri("http://localhost/MVC/public/user/login/facebook");
+        $this->currentUri = new Uri(SITE_ADDR.'/public/user/login/facebook');
         
         $this->credentials = new Credentials(
             $this->serviceCredentials['facebook']['key'],
@@ -60,7 +60,7 @@ class FacebookLogin
         if($existingUser === false)
         {
             // Never signed up with FB before - ask user to fill username and email
-            redirect("http://localhost/MVC/public/user/signup/facebook");
+            redirect(SITE_ADDR.'/public/user/signup/facebook');
         }
         else
         {

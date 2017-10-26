@@ -23,12 +23,15 @@ class Database
             throw new Exception($ex->getMessage());
         }
     }
-    
+
+    /**
+     * @return \App\Core\Database
+     */
     public static function getInstance()
     {
         if(self::$instance == null)
         {
-            self::$instance = new self();
+            self::$instance = new \App\Core\Database();
         }
         return self::$instance;
     }

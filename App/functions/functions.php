@@ -2,7 +2,7 @@
 
 function error_404()
 {
-    header('Location: http://localhost/MVC/public/page/404');
+    header('Location: '.SITE_ADDR.'/public/page/404');
     exit();
 }
 
